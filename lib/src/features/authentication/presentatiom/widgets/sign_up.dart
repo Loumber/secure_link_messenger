@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +29,16 @@ class _SignUpState extends State<SignUp> {
         children: [
           CircleAvatar(
             radius: 50 ,
-            backgroundColor: Colors.red[700],
+            backgroundColor: image == null? Colors.red[700]:Colors.transparent,
             child: image != null
-            ? Image.file(image!)
+            ?
+            ClipOval(
+              child:SizedBox(
+                width: 90.w,
+                height: 90.h,
+                child: Image.file(image!),
+                )
+            )
             :Stack(
                 children: [
                   Center(
@@ -45,7 +52,52 @@ class _SignUpState extends State<SignUp> {
                   ),
                   Center(
                     child: IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        showCupertinoModalPopup(
+                          context: context,
+                          builder: (BuildContext builder){
+                            return  CupertinoPopupSurface(
+                              child:Container(
+                                color: CupertinoColors.white, 
+                                width: double.infinity,                               
+                                height: 125.h,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 5.h,
+                                    ),
+                                    CupertinoButton(
+                                      child: Text('Камера',
+                                        style: TextStyle(
+                                        fontSize: 25.sp,
+                                        color: Colors.red[700] 
+                                        ),
+                                      ),
+                                      onPressed: (){
+                                        _pickImageFromCamera();
+                                      }),
+                                      Container(
+                                        height: 1.h,
+                                        color: Colors.red,
+                                        width: double.infinity,
+                                      ),
+                                    CupertinoButton(
+                                      child: Text('Галерея',
+                                        style: TextStyle(
+                                        fontSize: 25.sp,
+                                        color: Colors.red[700]
+                                        ),
+                                      ),
+                                      onPressed: (){
+                                        _pickImageFromGallery();
+                                      }),                                  
+                                  ],
+                                  ),
+                              )
+                            );
+                          }
+                        );
+                      },
                       icon: Icon(Icons.photo_camera_front_outlined,
                         color:  Colors.red[700],
                         size: 50.sp,)
@@ -231,9 +283,26 @@ class _SignUpState extends State<SignUp> {
   }
 
 
-  Future pickImage() async{
-
+  Future _pickImageFromGallery() async{
+    final selectedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (selectedImage  == null) {
+      return;
+    }
+    setState(() {
+      image = File(selectedImage.path);
+    });
   }
+
+  Future _pickImageFromCamera() async{
+    final selectedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (selectedImage  == null) {
+      return;
+    }
+    setState(() {
+      image = File(selectedImage.path);
+    });
+  }
+  
 
   Color getColorFromHex(String hexColor) {
     var hex = hexColor.replaceAll('#', '');
