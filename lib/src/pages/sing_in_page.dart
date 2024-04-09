@@ -16,7 +16,7 @@ class SignInPage extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(30.w, 250.h, 30.w, 0),
           child: Column(
             children: [
-              SignIn(),
+              const SignIn(),
               SizedBox(
                 height: 300.h,
               ),
