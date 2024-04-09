@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
+import 'package:logger/logger.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -113,7 +114,7 @@ class _SignUpState extends State<SignUp> {
               height: 20.h,
             ),
             CupertinoTextField(
-              onChanged: (value) {email=value;},
+              onChanged: (value) {name=value;},
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
                 color: getColorFromHex('#E9E9E9'),
@@ -168,7 +169,8 @@ class _SignUpState extends State<SignUp> {
               height: 15.h,
             ),
       
-            CupertinoTextField(            
+            CupertinoTextField(       
+              onChanged: (value){password = value;},     
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
                 color: getColorFromHex('#E9E9E9'),
@@ -213,10 +215,9 @@ class _SignUpState extends State<SignUp> {
             SizedBox(
               height: 15.h,
             ),
-      
-            
             CupertinoTextField(            
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
+              onChanged: (value){confirmationPassword=value;},
               decoration: BoxDecoration(
                 color: getColorFromHex('#E9E9E9'),
                 borderRadius: BorderRadius.circular((10)),
@@ -270,8 +271,9 @@ class _SignUpState extends State<SignUp> {
               ),
               ),
               onPressed: (){
+              
                if(isUnlockButton()){
-                Navigator.pushNamed(context, AppRoutes.homeRoot); 
+                Navigator.pushNamed(context, AppRoutes.verifyEmailRoot); 
                }
                else{
                 showCupertinoDialog(context: context,
@@ -279,13 +281,11 @@ class _SignUpState extends State<SignUp> {
                   return  CupertinoAlertDialog(
                     title: const Text('Неправильные данные'),
                     content: 
-                    email == null
+                    email == null || name == null || password == null || confirmationPassword == null
                     ? const Text('Заполните все поля') :
                     !EmailValidator.validate(email!)
                     ? const Text('Введена не существующая почта')
-                    : password != confirmationPassword 
-                    ? const Text('Пароли не совпадают')
-                    : const Text('Заполните все поля'),
+                    : const Text('Пароли не совпадают'),
                     actions: [
                       CupertinoDialogAction(
                         child: const Text('Ок'),
