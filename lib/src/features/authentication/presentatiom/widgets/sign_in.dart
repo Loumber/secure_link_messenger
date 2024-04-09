@@ -1,6 +1,8 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 
 
 class SignIn extends StatefulWidget {
@@ -13,7 +15,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   bool isPasswordVisible = true;
   bool isEmail = false;
-  String email = '';
+  String? email;
+  String? password;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,9 @@ class _SignInState extends State<SignIn> {
               style: TextStyle(
                 color: getColorFromHex("#6C6C6D"),
               ),
+              onChanged: (value){
+                password = value;
+              },
       
               prefix: Padding(
                 padding: EdgeInsets.fromLTRB(8.w, 0, 0, 0),
@@ -105,12 +111,41 @@ class _SignInState extends State<SignIn> {
               ),
               ),
               onPressed: (){
+                if(isUnlockButton()){
+                  Navigator.pushNamed(context, AppRoutes.homeRoot);
+                }
+                else{
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (BuildContext builder){
+                      return  CupertinoAlertDialog(
+                    title: const Text('Неправильные данные'),
+                    content: 
+                    email == null || password == null
+                    ? const Text('Заполните все поля') 
+                    : const Text('Введена не существующая почта'),
+                    actions: [
+                      CupertinoDialogAction(
+                        child: const Text('Ок'),
+                        onPressed: () {Navigator.pop(context);},
+                      )
+                    ],
+                    );
+                  });
+                }
                
               })
           ],
         ),
       );
     
+  }
+
+  bool isUnlockButton() {
+    return 
+        password != null &&
+        email != null &&
+        EmailValidator.validate(email!);
   }
 
   Color getColorFromHex(String hexColor) {
