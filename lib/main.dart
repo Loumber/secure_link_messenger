@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:secure_link_messenger/src/app/presentation/app.dart';
+import 'package:secure_link_messenger/app.dart';
 
 
 void main() async {

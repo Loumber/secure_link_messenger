@@ -19,5 +19,17 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository{
     // TODO: implement signUp
     throw UnimplementedError();
   }
+  
+  @override
+  Future<void> dischargePhoto(File imeage) {
+    // TODO: implement dischargePhoto
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<String> downloadPhotoUrl() {
+    // TODO: implement downloadPhotoUrl
+    throw UnimplementedError();
+  }
 
 }
