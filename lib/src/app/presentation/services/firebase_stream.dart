@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 import 'package:secure_link_messenger/src/pages/home_page.dart';
 import 'package:secure_link_messenger/src/pages/sing_in_page.dart';
 import 'package:secure_link_messenger/src/pages/verify_email_page.dart';
@@ -23,15 +25,16 @@ class FirebaseStream extends StatelessWidget {
         } else if (snapshot.hasData) {
           if (!snapshot.data!.emailVerified) {
             logger.d('верификация');
+            
             return const VerifyEmailPage();
           }else{
             logger.d('дом');
           return const HomePage();}
         } else {
-          logger.d('авторизация');
+          BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
           return const SignInPage();
         }
-      },
+      }
     );
   }
 }

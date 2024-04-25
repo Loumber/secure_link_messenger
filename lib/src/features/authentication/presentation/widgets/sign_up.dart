@@ -4,7 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/sign_up_bloc.dart';
+import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -270,9 +270,8 @@ class _SignUpState extends State<SignUp> {
               ),
               ),
               onPressed: (){
-              
                if(isUnlockButton()){
-                SignUpBloc().add(LoadingDataEvent());
+                AuthenticationBloc().add(SignUpLoadingDataEvent());
                }
                else{
                 showCupertinoDialog(context: context,

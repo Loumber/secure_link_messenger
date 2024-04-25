@@ -1,6 +1,7 @@
 import 'dart:io';
 
 abstract class AuthenticationRepository {
+  
   Future<void> dischargePhoto(File imeage);
   Future<String> downloadPhotoUrl();
   Future<bool> checkUser(String email);
