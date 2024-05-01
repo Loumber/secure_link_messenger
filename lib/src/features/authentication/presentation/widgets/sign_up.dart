@@ -271,7 +271,7 @@ class _SignUpState extends State<SignUp> {
               ),
               onPressed: (){
                if(isUnlockButton()){
-                AuthenticationBloc().add(SignUpLoadingDataEvent());
+                AuthenticationBloc().add(SignUpLoadingDataEvent(photo: image!, email: email!, name: name!, password: password!));
                }
                else{
                 showCupertinoDialog(context: context,
@@ -283,7 +283,9 @@ class _SignUpState extends State<SignUp> {
                     ? const Text('Заполните все поля') :
                     !EmailValidator.validate(email!)
                     ? const Text('Введена не существующая почта')
-                    : const Text('Пароли не совпадают'),
+                    : password!.length < 6 ? 
+                    const Text('Длина пароля должна быть более 5 символов'):
+                    const Text('Пароли не совпадают'),
                     actions: [
                       CupertinoDialogAction(
                         child: const Text('Ок'),
@@ -306,6 +308,7 @@ class _SignUpState extends State<SignUp> {
     return 
         password != null && confirmationPassword!=null
         && password == confirmationPassword &&
+        password!.length > 5 &&
         email != null &&
         EmailValidator.validate(email!)&&
         name != null;

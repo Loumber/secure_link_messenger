@@ -9,7 +9,14 @@ class IsSignUpEvent extends AuthenticationEvent{}
 
 class GoSignUpEvent extends AuthenticationEvent{}
 
-class SignUpLoadingDataEvent extends AuthenticationEvent{}
+class SignUpLoadingDataEvent extends AuthenticationEvent{
+  final File photo;
+  final String email;
+  final String name;
+  final String password;
+
+  SignUpLoadingDataEvent({required this.photo, required this.email, required this.name, required this.password});
+}
 
 class SignUpLoadedDataEvent extends AuthenticationEvent{}
 
