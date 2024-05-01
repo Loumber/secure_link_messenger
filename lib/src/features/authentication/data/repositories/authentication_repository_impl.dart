@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/features/authentication/data/provider/data_provider.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -8,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class AuthenticationRepositoryImpl implements AuthenticationRepository{
  
 
-  DataProvider _dataProvider = DataProvider();
+  final DataProvider _dataProvider = DataProvider();
 
   late User _currentUser;
   
@@ -22,9 +21,17 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository{
   }
 
   @override
-  Future<bool> signIn(String email, String password) {
-    // TODO: implement signIn
-    throw UnimplementedError();
+  Future<void> signIn() async {
+    try{
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _dataProvider.getSignInUserFromDomain().email,
+      password: _dataProvider.getSignInUserFromDomain().email,
+    );
+    }on FirebaseAuthException catch(e){
+      // ignore: avoid_print
+      print(e);
+    }
+
   }
 
 /*
@@ -48,11 +55,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository{
   Future<void> signUp() async {
     try{
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _dataProvider.getUserFromDomain().email, 
-        password: _dataProvider.getUserFromDomain().password);
+        email: _dataProvider.getSignUpUserFromDomain().email, 
+        password: _dataProvider.getSignUpUserFromDomain().password);
 
       _currentUser = FirebaseAuth.instance.currentUser!;
-      _currentUser.updateDisplayName(_dataProvider.getUserFromDomain().name);
+      
+      await _currentUser.updateDisplayName(_dataProvider.getSignUpUserFromDomain().name);
 
       _imageURL = await dischargePhoto();
       
@@ -65,7 +73,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository{
   
   @override
 Future<String> dischargePhoto() async {
-  File file = _dataProvider.getUserFromDomain().photo; 
+  File file = _dataProvider.getSignUpUserFromDomain().photo; 
   try { 
     firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;

@@ -58,6 +58,8 @@ class SignInPage extends StatelessWidget {
                   return const Placeholder();
                 case SignUpError():
                   return const Placeholder();
+                case SignInLoading():
+                  return const CupertinoActivityIndicator();
               }
             },
           ),

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
+import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 
 
 class SignIn extends StatefulWidget {
@@ -112,6 +113,7 @@ class _SignInState extends State<SignIn> {
               ),
               onPressed: (){
                 if(isUnlockButton()){
+                  AuthenticationBloc().add(SignInLoadingDataEvent(email: email!, password: password!));
                   Navigator.pushNamed(context, AppRoutes.homeRoot);
                 }
                 else{

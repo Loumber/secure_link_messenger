@@ -11,6 +11,8 @@ final class SignInInitial extends AuthenticationState{}
 
 final class SignUpLoading extends AuthenticationState{}
 
+final class SignInLoading extends AuthenticationState{}
+
 final class SignUpEmailVerify extends AuthenticationState{}
 
 final class IsAuthentication extends AuthenticationState{}

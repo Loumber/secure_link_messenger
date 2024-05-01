@@ -18,6 +18,14 @@ class SignUpLoadingDataEvent extends AuthenticationEvent{
   SignUpLoadingDataEvent({required this.photo, required this.email, required this.name, required this.password});
 }
 
+class SignInLoadingDataEvent extends AuthenticationEvent{
+  final String email;
+  final String password;
+
+  SignInLoadingDataEvent({required this.email, required this.password});
+}
+
+
 class SignUpLoadedDataEvent extends AuthenticationEvent{}
 
 class ErrorSignUp extends AuthenticationEvent{}

@@ -29,6 +29,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
  //   on<GoAuthenticationEvent>(_checkAuthentication());
 
     on<SignUpLoadingDataEvent>((event,emit){
+      emit(SignInLoading());
+      
+    });
+
+    on<SignUpLoadingDataEvent>((event,emit){
       emit(SignUpLoading());
       _domainProvider.registerSignUpUser(UserSignUpEntity(email: event.email, name: event.name, password: event.password, photo: event.photo));
       AuthenticationRepositoryImpl().signUp();
