@@ -4,7 +4,7 @@ import 'package:secure_link_messenger/src/features/authentication/domain/entitie
 class DomainProvider {
   final GetIt getIt = GetIt.instance;
 
-  void registerSignUpUser(UserSignUpEntity file) {
-    getIt.registerSingleton(file);
+  void registerSignUpUser(UserSignUpEntity newUser) {
+    getIt.registerSingleton(newUser);
   }
 }

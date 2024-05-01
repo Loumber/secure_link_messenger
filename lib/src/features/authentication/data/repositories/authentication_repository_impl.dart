@@ -1,12 +1,15 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:secure_link_messenger/src/features/authentication/data/provider/data_provider.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository{
-  final FirebaseAuth _firebaseAuth;
+ 
 
-  AuthenticationRepositoryImpl(this._firebaseAuth);
+  DataProvider _dataProvider = DataProvider();
 
+  
+  
 
   @override
   Future<bool> checkUser(String email) {
@@ -20,6 +23,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository{
     throw UnimplementedError();
   }
 
+/*
 
   Future<bool> isAuthenticated() async {
     final currentUser = _firebaseAuth.currentUser;
@@ -34,11 +38,19 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository{
     await _firebaseAuth.signOut();
   }
 
+*/
 
   @override
-  Future<bool> signUp(String email, String name, String password, File photo) {
-    // TODO: implement signUp
-    throw UnimplementedError();
+  Future<void> signUp() async {
+    try{
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _dataProvider.getUserFromDomain().email, 
+        password: _dataProvider.getUserFromDomain().password);
+      //await dischargePhoto(_dataProvider.getUserFromDomain().photo);
+    } on FirebaseAuthException catch(e){
+      // ignore: avoid_print
+      print(e);
+    }
   }
   
   @override
