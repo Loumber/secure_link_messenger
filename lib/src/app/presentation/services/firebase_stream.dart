@@ -22,8 +22,9 @@ class FirebaseStream extends StatelessWidget {
             return const Scaffold(
                 body: Center(child: Text('Что-то пошло не так!')));
           } else if (snapshot.hasData) {
-            //snapshot.data!.delete();
+           // snapshot.data!.delete();
             logger.d('дом');
+            BlocProvider.of<AuthenticationBloc>(context).add(IsAuthenticationEvent());
             return const HomePage();
           } else {
             BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());

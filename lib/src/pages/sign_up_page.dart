@@ -12,12 +12,14 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      
       canPop: true,
       onPopInvoked: (didPop) {
         Navigator.pushNamed(context, AppRoutes.signInRoot);
         BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body:
             Center(child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {

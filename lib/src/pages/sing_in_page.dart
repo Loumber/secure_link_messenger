@@ -12,7 +12,9 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Center(
       child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           switch (state) {

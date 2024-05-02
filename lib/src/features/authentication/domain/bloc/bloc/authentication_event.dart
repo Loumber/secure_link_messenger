@@ -5,7 +5,7 @@ sealed class AuthenticationEvent {}
 
 //class GoAuthenticationEvent extends AuthenticationEvent{}
 
-class IsSignUpEvent extends AuthenticationEvent {}
+class IsAuthenticationEvent extends AuthenticationEvent {}
 
 class GoSignUpEvent extends AuthenticationEvent {}
 

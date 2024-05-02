@@ -49,7 +49,7 @@ class AuthenticationBloc
       emit(SignUpEmailVerify());
     });
 
-    on<IsSignUpEvent>((event, emit) {
+    on<IsAuthenticationEvent>((event, emit) {
       emit(IsAuthentication());
     });
   }
