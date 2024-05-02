@@ -1,4 +1,3 @@
-
 class AppRoutes {
   static const homeRoot = "/home";
   static const initRoot = '/';

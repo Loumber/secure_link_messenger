@@ -12,34 +12,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthenticationBloc>(
-              create: (context)=>AuthenticationBloc(),
+        providers: [
+          BlocProvider<AuthenticationBloc>(
+            create: (context) => AuthenticationBloc(),
           )
-      ], 
-      child: ScreenUtilInit(
-      designSize: const Size(375, 804),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        initialRoute: AppRoutes.initRoot,
-        routes:<String, WidgetBuilder>{
-          AppRoutes.initRoot:(context) => const FirebaseStream(),
-          AppRoutes.homeRoot:(context) => const HomePage(),
-          AppRoutes.signInRoot:(context) => const SignInPage(),
-          AppRoutes.signUpRoot:(context) => const SignUpPage(),
-          AppRoutes.verifyEmailRoot:(context) => const VerifyEmailPage()
-        },
-      ),
-    )
-    );
+        ],
+        child: ScreenUtilInit(
+          designSize: const Size(375, 804),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            initialRoute: AppRoutes.initRoot,
+            routes: <String, WidgetBuilder>{
+              AppRoutes.initRoot: (context) => const FirebaseStream(),
+              AppRoutes.homeRoot: (context) => const HomePage(),
+              AppRoutes.signInRoot: (context) => const SignInPage(),
+              AppRoutes.signUpRoot: (context) => const SignUpPage(),
+              AppRoutes.verifyEmailRoot: (context) => const VerifyEmailPage()
+            },
+          ),
+        ));
   }
 }

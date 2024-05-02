@@ -10,33 +10,30 @@ class VerifyEmailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: (context, state) {
-            switch(state){
-              case AuthenticationInitial _:
-                return const CupertinoActivityIndicator();
-              case SignUpInitial _:
-                return const CupertinoActivityIndicator();
-              case SignInInitial _:
-                return const Placeholder();
-              case SignUpLoading _:
-                return const CupertinoActivityIndicator();
-              case SignInLoading _:
-                return const Placeholder();
-              case SignUpEmailVerify _:
-                return Padding(
-                  padding:  EdgeInsets.fromLTRB(20.w, 90.h, 20.w, 0),
-                  child: const VerifyEmail(),
-                );
-              case IsAuthentication _:
-                return const CupertinoActivityIndicator();
-              case SignUpError _:
-                return const Placeholder();
-            }
-          }
-        ))
-    );
+    return Scaffold(body: Center(child:
+        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+      switch (state) {
+        case AuthenticationInitial _:
+          return const CupertinoActivityIndicator();
+        case SignUpInitial _:
+          return const CupertinoActivityIndicator();
+        case SignInInitial _:
+          return const Placeholder();
+        case SignUpLoading _:
+          return const CupertinoActivityIndicator();
+        case SignInLoading _:
+          return const Placeholder();
+        case SignUpEmailVerify _:
+          return Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 90.h, 20.w, 0),
+            child: const VerifyEmail(),
+          );
+        case IsAuthentication _:
+          return const CupertinoActivityIndicator();
+        case SignUpError _:
+          return const Placeholder();
+      }
+    })));
   }
-} 
+}

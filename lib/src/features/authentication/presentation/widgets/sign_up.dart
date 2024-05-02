@@ -31,91 +31,91 @@ class _SignUpState extends State<SignUp> {
         child: Column(
           children: [
             CircleAvatar(
-              radius: 50 ,
-              backgroundColor: image == null? Colors.red[700]:Colors.transparent,
+              radius: 50,
+              backgroundColor:
+                  image == null ? Colors.red[700] : Colors.transparent,
               child: image != null
-              ?
-              ClipOval(
-                child:SizedBox(
-                  width: 90.w,
-                  height: 90.h,
-                  child: Image.file(image!),
-                  )
-              )
-              :Stack(
-                  children: [
-                    Center(
-                      child: ClipOval(
-                      child: Container(
-                        width: 90,
-                        height: 90,
-                        color: Colors.white,
+                  ? ClipOval(
+                      child: SizedBox(
+                      width: 90.w,
+                      height: 90.h,
+                      child: Image.file(image!),
+                    ))
+                  : Stack(
+                      children: [
+                        Center(
+                          child: ClipOval(
+                            child: Container(
+                              width: 90,
+                              height: 90,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Center(
-                      child: IconButton(
-                        onPressed: (){
-                          showCupertinoModalPopup(
-                            context: context,
-                            builder: (BuildContext builder){
-                              return  CupertinoPopupSurface(
-                                child:Container(
-                                  color: CupertinoColors.white, 
-                                  width: double.infinity,                               
-                                  height: 125.h,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 5.h,
-                                      ),
-                                      CupertinoButton(
-                                        child: Text('Камера',
-                                          style: TextStyle(
-                                          fontSize: 25.sp,
-                                          color: Colors.red[700] 
-                                          ),
+                        Center(
+                          child: IconButton(
+                              onPressed: () {
+                                showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (BuildContext builder) {
+                                      return CupertinoPopupSurface(
+                                          child: Container(
+                                        color: CupertinoColors.white,
+                                        width: double.infinity,
+                                        height: 125.h,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 5.h,
+                                            ),
+                                            CupertinoButton(
+                                                child: Text(
+                                                  'Камера',
+                                                  style: TextStyle(
+                                                      fontSize: 25.sp,
+                                                      color: Colors.red[700]),
+                                                ),
+                                                onPressed: () {
+                                                  _pickImageFromCamera();
+                                                  Navigator.pop(context);
+                                                }),
+                                            Container(
+                                              height: 1.h,
+                                              color: Colors.red,
+                                              width: double.infinity,
+                                            ),
+                                            CupertinoButton(
+                                                child: Text(
+                                                  'Галерея',
+                                                  style: TextStyle(
+                                                      fontSize: 25.sp,
+                                                      color: Colors.red[700]),
+                                                ),
+                                                onPressed: () {
+                                                  _pickImageFromGallery();
+                                                  Navigator.pop(context);
+                                                }),
+                                          ],
                                         ),
-                                        onPressed: (){
-                                          _pickImageFromCamera();
-                                          Navigator.pop(context);
-                                        }),
-                                        Container(
-                                          height: 1.h,
-                                          color: Colors.red,
-                                          width: double.infinity,
-                                        ),
-                                      CupertinoButton(
-                                        child: Text('Галерея',
-                                          style: TextStyle(
-                                          fontSize: 25.sp,
-                                          color: Colors.red[700]
-                                          ),
-                                        ),
-                                        onPressed: (){
-                                          _pickImageFromGallery();
-                                          Navigator.pop(context);
-                                        }),                                  
-                                    ],
-                                    ),
-                                )
-                              );
-                            }
-                          );
-                        },
-                        icon: Icon(Icons.photo_camera_front_outlined,
-                          color:  Colors.red[700],
-                          size: 50.sp,)
+                                      ));
+                                    });
+                              },
+                              icon: Icon(
+                                Icons.photo_camera_front_outlined,
+                                color: Colors.red[700],
+                                size: 50.sp,
+                              )),
                         ),
+                      ],
                     ),
-                  ],
-                ),
             ),
             SizedBox(
               height: 20.h,
             ),
             CupertinoTextField(
-              onChanged: (value) {name=value;},
+              onChanged: (value) {
+                name = value;
+              },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
                 color: getColorFromHex('#E9E9E9'),
@@ -130,20 +130,20 @@ class _SignUpState extends State<SignUp> {
               ),
               prefix: Padding(
                 padding: EdgeInsets.fromLTRB(8.w, 0, 0, 0),
-                child:Icon(
-                Icons.person_4_outlined,
-                size: 20.sp,
-                color: getColorFromHex("#6C6C6D"),
-                ), 
+                child: Icon(
+                  Icons.person_4_outlined,
+                  size: 20.sp,
+                  color: getColorFromHex("#6C6C6D"),
+                ),
               ),
             ),
-      
             SizedBox(
               height: 15.h,
             ),
-      
             CupertinoTextField(
-              onChanged: (value) {email=value;},
+              onChanged: (value) {
+                email = value;
+              },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
                 color: getColorFromHex('#E9E9E9'),
@@ -158,20 +158,20 @@ class _SignUpState extends State<SignUp> {
               ),
               prefix: Padding(
                 padding: EdgeInsets.fromLTRB(8.w, 0, 0, 0),
-                child:Icon(
-                Icons.alternate_email_outlined,
-                size: 20.sp,
-                color: getColorFromHex("#6C6C6D"),
-                ), 
+                child: Icon(
+                  Icons.alternate_email_outlined,
+                  size: 20.sp,
+                  color: getColorFromHex("#6C6C6D"),
+                ),
               ),
-              
             ),
             SizedBox(
               height: 15.h,
             ),
-      
-            CupertinoTextField(       
-              onChanged: (value){password = value;},     
+            CupertinoTextField(
+              onChanged: (value) {
+                password = value;
+              },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
                 color: getColorFromHex('#E9E9E9'),
@@ -186,39 +186,39 @@ class _SignUpState extends State<SignUp> {
               ),
               prefix: Padding(
                 padding: EdgeInsets.fromLTRB(8.w, 0, 0, 0),
-                child:Icon(
-                Icons.lock_outline,
-                size: 20.sp,
-                color: getColorFromHex("#6C6C6D"),
-                ), 
+                child: Icon(
+                  Icons.lock_outline,
+                  size: 20.sp,
+                  color: getColorFromHex("#6C6C6D"),
+                ),
               ),
               suffix: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 10.w, 0),
-                child:IconButton(
-                  onPressed: () =>
-                    setState(() => isPasswordVisible = !isPasswordVisible),
-                  icon: isPasswordVisible 
-                  ? Icon(
-                      Icons.visibility_off_outlined,
-                      size: 20.sp,
-                      color: getColorFromHex("#6C6C6D"),
-                    )
-                  : Icon(
-                      Icons.visibility_outlined,
-                      size: 20.sp,
-                      color: getColorFromHex("#6C6C6D"),
-                    )
-                ),
+                child: IconButton(
+                    onPressed: () =>
+                        setState(() => isPasswordVisible = !isPasswordVisible),
+                    icon: isPasswordVisible
+                        ? Icon(
+                            Icons.visibility_off_outlined,
+                            size: 20.sp,
+                            color: getColorFromHex("#6C6C6D"),
+                          )
+                        : Icon(
+                            Icons.visibility_outlined,
+                            size: 20.sp,
+                            color: getColorFromHex("#6C6C6D"),
+                          )),
               ),
               obscureText: isPasswordVisible,
             ),
-      
             SizedBox(
               height: 15.h,
             ),
-            CupertinoTextField(            
+            CupertinoTextField(
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
-              onChanged: (value){confirmationPassword=value;},
+              onChanged: (value) {
+                confirmationPassword = value;
+              },
               decoration: BoxDecoration(
                 color: getColorFromHex('#E9E9E9'),
                 borderRadius: BorderRadius.circular((10)),
@@ -232,96 +232,121 @@ class _SignUpState extends State<SignUp> {
               ),
               prefix: Padding(
                 padding: EdgeInsets.fromLTRB(8.w, 0, 0, 0),
-                child:Icon(
-                Icons.lock_outline,
-                size: 20.sp,
-                color: getColorFromHex("#6C6C6D"),
-                ), 
+                child: Icon(
+                  Icons.lock_outline,
+                  size: 20.sp,
+                  color: getColorFromHex("#6C6C6D"),
+                ),
               ),
               suffix: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 10.w, 0),
-                child:IconButton(
-                  onPressed: () =>
-                    setState(() => isConfirmationPasswordVisible = !isConfirmationPasswordVisible),
-                  icon: isConfirmationPasswordVisible 
-                  ? Icon(
-                      Icons.visibility_off_outlined,
-                      size: 20.sp,
-                      color: getColorFromHex("#6C6C6D"),
-                    )
-                  : Icon(
-                      Icons.visibility_outlined,
-                      size: 20.sp,
-                      color: getColorFromHex("#6C6C6D"),
-                    )
-                ),
+                child: IconButton(
+                    onPressed: () => setState(() =>
+                        isConfirmationPasswordVisible =
+                            !isConfirmationPasswordVisible),
+                    icon: isConfirmationPasswordVisible
+                        ? Icon(
+                            Icons.visibility_off_outlined,
+                            size: 20.sp,
+                            color: getColorFromHex("#6C6C6D"),
+                          )
+                        : Icon(
+                            Icons.visibility_outlined,
+                            size: 20.sp,
+                            color: getColorFromHex("#6C6C6D"),
+                          )),
               ),
               obscureText: isConfirmationPasswordVisible,
             ),
-      
-      
             SizedBox(
               height: 20.h,
             ),
             CupertinoButton(
-              borderRadius: BorderRadius.circular((36)),
-              color: Colors.red[700],
-              child: Text('Зарегестрироваться',
-              style: TextStyle(
-                fontSize: 18.sp,
-              ),
-              ),
-              onPressed: (){
-               if(isUnlockButton()){
-                AuthenticationBloc().add(SignUpLoadingDataEvent(photo: image!, email: email!, name: name!, password: password!));
-                Navigator.pushNamed(context, AppRoutes.verifyEmailRoot);
-                BlocProvider.of<AuthenticationBloc>(context).add(SignUpLoadedDataEvent());
-               }
-               else{
-                showCupertinoDialog(context: context,
-                 builder:(BuildContext builder){
-                  return  CupertinoAlertDialog(
-                    title: const Text('Неправильные данные'),
-                    content: 
-                    email == null || name == null || password == null || confirmationPassword == null
-                    ? const Text('Заполните все поля') :
-                    !EmailValidator.validate(email!)
-                    ? const Text('Введена не существующая почта')
-                    : password!.length < 6 ? 
-                    const Text('Длина пароля должна быть более 5 символов'):
-                    const Text('Пароли не совпадают'),
-                    actions: [
-                      CupertinoDialogAction(
-                        child: const Text('Ок'),
-                        onPressed: () {Navigator.pop(context);},
-                      )
-                    ],
-                    );
-                    
+                borderRadius: BorderRadius.circular((36)),
+                color: Colors.red[700],
+                child: Text(
+                  'Зарегестрироваться',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                  ),
+                ),
+                onPressed: () {
+                  if (isUnlockButton()) {
+                    AuthenticationBloc().add(SignUpLoadingDataEvent(
+                        photo: image!,
+                        email: email!,
+                        name: name!,
+                        password: password!));
+                    Navigator.pushNamed(context, AppRoutes.verifyEmailRoot);
+                    BlocProvider.of<AuthenticationBloc>(context)
+                        .add(SignUpLoadedDataEvent());
+                  } else {
+                    showCupertinoDialog(
+                        context: context,
+                        builder: (BuildContext builder) {
+                          return CupertinoAlertDialog(
+                            title: const Text('Неправильные данные'),
+                            content: email == null ||
+                                    name == null ||
+                                    password == null ||
+                                    confirmationPassword == null
+                                ? const Text('Заполните все поля')
+                                : !EmailValidator.validate(email!)
+                                    ? const Text(
+                                        'Введена не существующая почта')
+                                    : password!.length < 6
+                                        ? const Text(
+                                            'Длина пароля должна быть более 5 символов')
+                                        : const Text('Пароли не совпадают'),
+                            actions: [
+                              CupertinoDialogAction(
+                                child: const Text('Ок'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          );
+                        });
                   }
-                );
-               }
-
-              })
-          ],),
+                }),
+            SizedBox(
+              height: 15.h,
+            ),
+            TextButton(
+              onPressed: () {
+                BlocProvider.of<AuthenticationBloc>(context)
+                    .add(GoSignInEvent());
+                Navigator.pushNamed(context, AppRoutes.signInRoot);
+              },
+              child: Text(
+                'Войти',
+                style: TextStyle(
+                  color: getColorFromHex("#6C6C6D"),
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   bool isUnlockButton() {
-    return 
-        password != null && confirmationPassword!=null
-        && password == confirmationPassword &&
+    return password != null &&
+        confirmationPassword != null &&
+        password == confirmationPassword &&
         password!.length > 5 &&
         email != null &&
-        EmailValidator.validate(email!)&&
+        EmailValidator.validate(email!) &&
         name != null;
   }
 
-
-  Future _pickImageFromGallery() async{
-    final selectedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (selectedImage  == null) {
+  Future _pickImageFromGallery() async {
+    final selectedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (selectedImage == null) {
       return;
     }
     setState(() {
@@ -329,16 +354,16 @@ class _SignUpState extends State<SignUp> {
     });
   }
 
-  Future _pickImageFromCamera() async{
-    final selectedImage = await ImagePicker().pickImage(source: ImageSource.camera);
-    if (selectedImage  == null) {
+  Future _pickImageFromCamera() async {
+    final selectedImage =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (selectedImage == null) {
       return;
     }
     setState(() {
       image = File(selectedImage.path);
     });
   }
-  
 
   Color getColorFromHex(String hexColor) {
     var hex = hexColor.replaceAll('#', '');
