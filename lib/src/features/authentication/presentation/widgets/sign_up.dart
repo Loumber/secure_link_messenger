@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
@@ -274,6 +275,7 @@ class _SignUpState extends State<SignUp> {
                if(isUnlockButton()){
                 AuthenticationBloc().add(SignUpLoadingDataEvent(photo: image!, email: email!, name: name!, password: password!));
                 Navigator.pushNamed(context, AppRoutes.verifyEmailRoot);
+                BlocProvider.of<AuthenticationBloc>(context).add(SignUpLoadedDataEvent());
                }
                else{
                 showCupertinoDialog(context: context,

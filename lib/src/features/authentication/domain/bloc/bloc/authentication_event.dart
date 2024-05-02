@@ -30,4 +30,6 @@ class SignUpLoadedDataEvent extends AuthenticationEvent{}
 
 class ErrorSignUp extends AuthenticationEvent{}
 
+class CancelSignUpEvent extends AuthenticationEvent{}
+
 class GoSignInEvent extends AuthenticationEvent{}

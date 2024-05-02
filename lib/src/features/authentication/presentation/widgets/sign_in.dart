@@ -114,7 +114,7 @@ class _SignInState extends State<SignIn> {
               onPressed: (){
                 if(isUnlockButton()){
                   AuthenticationBloc().add(SignInLoadingDataEvent(email: email!, password: password!));
-                  Navigator.pushNamed(context, AppRoutes.homeRoot);
+                  Navigator.pushNamed(context, AppRoutes.verifyEmailRoot);
                 }
                 else{
                   showCupertinoDialog(

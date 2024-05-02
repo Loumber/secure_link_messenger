@@ -26,15 +26,16 @@ class FirebaseStream extends StatelessWidget {
           if (!snapshot.data!.emailVerified) {
          // snapshot.data!.delete();
             logger.d('верификация');
+            BlocProvider.of<AuthenticationBloc>(context).add(SignUpLoadedDataEvent());
             return const VerifyEmailPage();
           }else{
             logger.d('дом');
           return const HomePage();}
         } else {
-          //BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
-          //return const SignInPage();
-          BlocProvider.of<AuthenticationBloc>(context).add(SignUpLoadedDataEvent());
-          return const VerifyEmailPage();
+          BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
+          return const SignInPage();
+         // BlocProvider.of<AuthenticationBloc>(context).add(SignUpLoadedDataEvent());
+         // return const VerifyEmailPage();
         }
       }
     );

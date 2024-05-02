@@ -65,8 +65,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
               onPressed: (){}),
               TextButton(
                 onPressed: (){
-                  BlocProvider.of<AuthenticationBloc>(context).add(GoSignUpEvent());
-                  Navigator.pushNamed(context, AppRoutes.signUpRoot);
+                  BlocProvider.of<AuthenticationBloc>(context).add(CancelSignUpEvent());
+                  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.signUpRoot , (route) => false);
                 }, 
                 child: Text( 'Отменить',
                   style: TextStyle( 

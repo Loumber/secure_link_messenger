@@ -61,7 +61,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository{
       _currentUser = FirebaseAuth.instance.currentUser!;
       
       await _currentUser.updateDisplayName(_dataProvider.getSignUpUserFromDomain().name);
-
+      sendEmailVerification();
       _imageURL = await dischargePhoto();
       
       _currentUser.updatePhotoURL(_imageURL);
@@ -72,7 +72,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository{
   }
   
   @override
-Future<String> dischargePhoto() async {
+  Future<String> dischargePhoto() async {
   File file = _dataProvider.getSignUpUserFromDomain().photo; 
   try { 
     firebase_storage.FirebaseStorage storage =
@@ -91,6 +91,18 @@ Future<String> dischargePhoto() async {
   Future<String> downloadPhotoUrl() {
     // TODO: implement downloadPhotoUrl
     throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> deleteCurrentUser() async{
+    await _currentUser.delete();
+  }
+  
+  @override
+    void sendEmailVerification(){
+    if(!_currentUser.emailVerified){
+      _currentUser.sendEmailVerification();
+    }
   }
 
 }

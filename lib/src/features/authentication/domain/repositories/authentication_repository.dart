@@ -5,4 +5,6 @@ abstract class AuthenticationRepository {
   Future<bool> checkUser(String email);
   Future<void> signIn();
   Future<void> signUp();
+  Future<void> deleteCurrentUser();
+  void sendEmailVerification();
 }
