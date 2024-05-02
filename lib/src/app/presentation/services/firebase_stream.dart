@@ -24,16 +24,17 @@ class FirebaseStream extends StatelessWidget {
               body: Center(child: Text('Что-то пошло не так!')));
         } else if (snapshot.hasData) {
           if (!snapshot.data!.emailVerified) {
-          //snapshot.data!.delete();
+         // snapshot.data!.delete();
             logger.d('верификация');
-            
             return const VerifyEmailPage();
           }else{
             logger.d('дом');
           return const HomePage();}
         } else {
-          BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
-          return const SignInPage();
+          //BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
+          //return const SignInPage();
+          BlocProvider.of<AuthenticationBloc>(context).add(SignUpLoadedDataEvent());
+          return const VerifyEmailPage();
         }
       }
     );

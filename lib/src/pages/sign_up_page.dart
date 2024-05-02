@@ -14,7 +14,9 @@ class SignUpPage extends StatelessWidget {
     return PopScope(
       canPop: true,
       onPopInvoked : (didPop){
+        Navigator.pushNamed(context, AppRoutes.signInRoot);
         BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
+        
       },
       child: Scaffold(
         body: Center(

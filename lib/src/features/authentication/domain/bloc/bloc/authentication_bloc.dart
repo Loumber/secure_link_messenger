@@ -28,7 +28,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
  //   on<GoAuthenticationEvent>(_checkAuthentication());
 
-    on<SignUpLoadingDataEvent>((event,emit){
+    on<SignInLoadingDataEvent>((event,emit){
       emit(SignInLoading());
       
     });
