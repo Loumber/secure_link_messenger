@@ -86,7 +86,7 @@ class __MyNavigationBarState extends State<MyNavigationBar> {
                             StateMachineController.fromArtboard(
                                 artboard, currentNavigationBarItem.stateMachineName);
                         artboard.addController(controller!);
-                        NavigationBarItem.add(controller.findInput<bool>('active') as SMIBool);
+                        navigationBarItem.add(controller.findInput<bool>('active') as SMIBool);
                         controllers.add(controller);
                       },
                     ),
