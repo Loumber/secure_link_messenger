@@ -49,6 +49,7 @@ dependencies:
   flutter_bloc: ^8.1.5
   path_provider: ^2.1.3
   rive: ^0.13.2
+  flutter_riverpod: ^2.5.1
   
 
 dev_dependencies:

@@ -1,30 +1,30 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rive/rive.dart';
+import 'package:secure_link_messenger/src/features/navigation_bar/data/providers/page_provider.dart';
 import 'package:secure_link_messenger/src/features/navigation_bar/data/repositories/navigation_%20bar_items_repository_impl.dart';
-
 
 Color? navigationBarBackgroundColor = Colors.red[900];
 
-class MyNavigationBar extends StatefulWidget {
+class MyNavigationBar extends ConsumerStatefulWidget {
   const MyNavigationBar({super.key});
 
   @override
-  State<MyNavigationBar> createState() => __MyNavigationBarState();
+  ConsumerState<MyNavigationBar> createState() => __MyNavigationBarState();
 }
 
-class __MyNavigationBarState extends State<MyNavigationBar> {
-
+class __MyNavigationBarState extends ConsumerState<MyNavigationBar> {
   int selectedItem = 1;
 
-  List<StateMachineController> controllers =[];
-  
+  List<StateMachineController> controllers = [];
+
   List<SMIBool> navigationBarItem = [];
 
   @override
-  void dispose(){
-    for(var controller in controllers){
+  void dispose() {
+    for (var controller in controllers) {
       controller.dispose();
     }
     super.dispose();
@@ -59,16 +59,16 @@ class __MyNavigationBarState extends State<MyNavigationBar> {
           return GestureDetector(
             onTap: () {
               navigationBarItem[index].change(true);
-              Future.delayed(
-                const Duration(seconds: 1),
-                (){
-                  navigationBarItem[index].change(false);
-                }
-              );
+              Future.delayed(const Duration(seconds: 1), () {
+                navigationBarItem[index].change(false);
+              });
+              if (index != selectedItem) {
+                ref.watch(pageProvider.notifier).update((state) => index);
+              }
               setState(() {
                 selectedItem = index;
               });
-              },
+            },
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -77,16 +77,17 @@ class __MyNavigationBarState extends State<MyNavigationBar> {
                   height: 36,
                   width: 36,
                   child: Opacity(
-                    opacity: selectedItem == index? 1 :0.5,
+                    opacity: selectedItem == index ? 1 : 0.5,
                     child: RiveAnimation.asset(
                       currentNavigationBarItem.src,
                       artboard: currentNavigationBarItem.artboard,
                       onInit: (artboard) {
                         StateMachineController? controller =
-                            StateMachineController.fromArtboard(
-                                artboard, currentNavigationBarItem.stateMachineName);
+                            StateMachineController.fromArtboard(artboard,
+                                currentNavigationBarItem.stateMachineName);
                         artboard.addController(controller!);
-                        navigationBarItem.add(controller.findInput<bool>('active') as SMIBool);
+                        navigationBarItem.add(
+                            controller.findInput<bool>('active') as SMIBool);
                         controllers.add(controller);
                       },
                     ),
@@ -99,14 +100,12 @@ class __MyNavigationBarState extends State<MyNavigationBar> {
       ),
     ));
   }
+
 }
 
 class MyAnimatedContainer extends StatelessWidget {
-  const MyAnimatedContainer({
-    super.key,
-    required this.isActive
-  });
-  
+  const MyAnimatedContainer({super.key, required this.isActive});
+
   final bool isActive;
 
   @override
@@ -115,11 +114,11 @@ class MyAnimatedContainer extends StatelessWidget {
       duration: const Duration(milliseconds: 200),
       margin: EdgeInsets.only(bottom: 5.h),
       height: 4.h,
-      width: isActive? 20.w : 0,
+      width: isActive ? 20.w : 0,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(24)),
       ),
-      );
+    );
   }
 }
