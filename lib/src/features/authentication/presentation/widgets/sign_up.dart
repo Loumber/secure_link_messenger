@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:email_validator/email_validator.dart';
@@ -270,8 +272,9 @@ class _SignUpState extends State<SignUp> {
                     fontSize: 18.sp,
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (isUnlockButton()) {
+                    image ??= await getImageFileFromAsset('assets/images/avatar.jpg');
                     AuthenticationBloc().add(SignUpLoadingDataEvent(
                         photo: image!,
                         email: email!,
@@ -363,6 +366,15 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       image = File(selectedImage.path);
     });
+  }
+
+  Future<File> getImageFileFromAsset(String assetPath) async {
+    final data = await rootBundle.load(assetPath);
+    final List<int> bytes = data.buffer.asUint8List();
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/${assetPath.split('/').last}');
+    await tempFile.writeAsBytes(bytes);
+    return tempFile;
   }
 
   Color getColorFromHex(String hexColor) {

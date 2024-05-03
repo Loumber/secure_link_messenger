@@ -23,6 +23,10 @@ class _SignInState extends State<SignIn> {
     return SizedBox(
       child: Column(
         children: [
+          SizedBox(height: 150.h, child: Image.asset('assets/images/logo.png')),
+          SizedBox(
+            height: 50.h,
+          ),
           CupertinoTextField(
             onChanged: (value) {
               email = value;

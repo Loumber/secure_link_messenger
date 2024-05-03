@@ -12,7 +12,6 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      
       canPop: true,
       onPopInvoked: (didPop) {
         Navigator.pushNamed(context, AppRoutes.signInRoot);

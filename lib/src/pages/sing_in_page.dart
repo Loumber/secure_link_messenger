@@ -13,58 +13,59 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Center(
-      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state) {
-          switch (state) {
-            case AuthenticationInitial _:
-              var logger = Logger(
-                printer: PrettyPrinter(),
-              );
-              logger.d('AuthenticationInitial');
-              return const Placeholder();
-            case SignUpInitial _:
-              return const CupertinoActivityIndicator();
-            case SignInInitial _:
-              return Padding(
-                  padding: EdgeInsets.fromLTRB(30.w, 250.h, 30.w, 0),
-                  child: Column(
-                    children: [
-                      const SignIn(),
-                      SizedBox(
-                        height: 15.h,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          BlocProvider.of<AuthenticationBloc>(context)
-                              .add(GoSignUpEvent());
-                          Navigator.pushNamed(context, AppRoutes.signUpRoot);
-                        },
-                        child: Text(
-                          'Зарегистрироваться',
-                          style: TextStyle(
-                            color: getColorFromHex("#6C6C6D"),
-                            fontSize: 16.sp,
+        resizeToAvoidBottomInset: false,
+        body: Center(
+          child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+              switch (state) {
+                case AuthenticationInitial _:
+                  var logger = Logger(
+                    printer: PrettyPrinter(),
+                  );
+                  logger.d('AuthenticationInitial');
+                  return const Placeholder();
+                case SignUpInitial _:
+                  return const CupertinoActivityIndicator();
+                case SignInInitial _:
+                  return Padding(
+                      padding: EdgeInsets.fromLTRB(30.w, 80.h, 30.w, 0),
+                      child: Column(
+                        children: [
+                          const SignIn(),
+                          SizedBox(
+                            height: 15.h,
                           ),
-                        ),
-                      ),
-                    ],
-                  ));
-            case SignUpLoading _:
-              return const Placeholder();
-            case SignUpEmailVerify _:
-              return const Placeholder();
-            case IsAuthentication():
-              return const Placeholder();
-            case SignUpError():
-              return const Placeholder();
-            case SignInLoading():
-              return const CupertinoActivityIndicator();
-          }
-        },
-      ),
-    ));
+                          TextButton(
+                            onPressed: () {
+                              BlocProvider.of<AuthenticationBloc>(context)
+                                  .add(GoSignUpEvent());
+                              Navigator.pushNamed(
+                                  context, AppRoutes.signUpRoot);
+                            },
+                            child: Text(
+                              'Зарегистрироваться',
+                              style: TextStyle(
+                                color: getColorFromHex("#6C6C6D"),
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ));
+                case SignUpLoading _:
+                  return const Placeholder();
+                case SignUpEmailVerify _:
+                  return const Placeholder();
+                case IsAuthentication():
+                  return const Placeholder();
+                case SignUpError():
+                  return const Placeholder();
+                case SignInLoading():
+                  return const CupertinoActivityIndicator();
+              }
+            },
+          ),
+        ));
   }
 
   Color getColorFromHex(String hexColor) {
