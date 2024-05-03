@@ -274,7 +274,8 @@ class _SignUpState extends State<SignUp> {
                 ),
                 onPressed: () async {
                   if (isUnlockButton()) {
-                    image ??= await getImageFileFromAsset('assets/images/avatar.jpg');
+                    image ??=
+                        await getImageFileFromAsset('assets/images/avatar.jpg');
                     AuthenticationBloc().add(SignUpLoadingDataEvent(
                         photo: image!,
                         email: email!,

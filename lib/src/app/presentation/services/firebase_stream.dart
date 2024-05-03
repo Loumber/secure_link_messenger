@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 import 'package:secure_link_messenger/src/app/presentation/pages/home_page.dart';
 import 'package:secure_link_messenger/src/pages/sing_in_page.dart';
-import 'package:secure_link_messenger/src/pages/verify_email_page.dart';
 import 'package:logger/logger.dart';
 
 class FirebaseStream extends StatelessWidget {
