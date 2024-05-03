@@ -28,7 +28,8 @@ class FirebaseStream extends StatelessWidget {
             return const HomePage();
           } else {
             BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
-            return const SignInPage();
+            //return const SignInPage();
+            return const HomePage();
           }
         });
   }
