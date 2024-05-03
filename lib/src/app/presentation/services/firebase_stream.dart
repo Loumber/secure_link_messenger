@@ -2,9 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
-import 'package:secure_link_messenger/src/app/presentation/pages/home_page.dart';
+import 'package:secure_link_messenger/src/pages/home_page.dart';
 import 'package:secure_link_messenger/src/pages/sing_in_page.dart';
-import 'package:secure_link_messenger/src/pages/verify_email_page.dart';
 import 'package:logger/logger.dart';
 
 class FirebaseStream extends StatelessWidget {
@@ -28,8 +27,10 @@ class FirebaseStream extends StatelessWidget {
                 .add(IsAuthenticationEvent());
             return const HomePage();
           } else {
-            BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
-            return const SignInPage();
+            //BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
+            //return const SignInPage();
+            BlocProvider.of<AuthenticationBloc>(context).add(IsAuthenticationEvent());
+            return const HomePage();
           }
         });
   }
