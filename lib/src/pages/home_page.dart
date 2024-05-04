@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:secure_link_messenger/src/features/app_bar/presentation/contacts_app_bar.dart';
+import 'package:secure_link_messenger/src/features/app_bar/presentation/message_app_bar.dart';
 import 'package:secure_link_messenger/src/features/navigation_bar/data/providers/page_provider.dart';
 import 'package:secure_link_messenger/src/pages/contacts_page.dart';
 import 'package:secure_link_messenger/src/pages/message_page.dart';
@@ -20,7 +22,7 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   final PageStorageBucket _bucket = PageStorageBucket();
 
-  late Widget _currentPage;
+
 
   List<Widget> pages = [
     const ContactsPage(key: PageStorageKey('Contacts_page')),
@@ -31,11 +33,11 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Чаты',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+      appBar:AppBar(
+        title:
+         ref.watch(pageProvider) == 0 ?  const ContactsAppBar() : 
+         ref.watch(pageProvider) == 1 ?  const MessageAppBar() :
+         null    
       ),
       resizeToAvoidBottomInset: false,
       body: Center(
