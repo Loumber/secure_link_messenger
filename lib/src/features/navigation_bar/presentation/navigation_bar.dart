@@ -100,7 +100,6 @@ class __MyNavigationBarState extends ConsumerState<MyNavigationBar> {
       ),
     ));
   }
-
 }
 
 class MyAnimatedContainer extends StatelessWidget {

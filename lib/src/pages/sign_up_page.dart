@@ -31,9 +31,6 @@ class SignUpPage extends StatelessWidget {
               case SignUpLoading _:
                 return const CupertinoActivityIndicator();
               case SignUpEmailVerify _:
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushNamed(context, AppRoutes.verifyEmailRoot);
-                });
                 return CupertinoAlertDialog(
                   title: const Text('Данные успешно отправлены'),
                   actions: [
@@ -46,7 +43,9 @@ class SignUpPage extends StatelessWidget {
                   ],
                 );
               case IsAuthentication _:
-                return const Placeholder();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, AppRoutes.homeRoot, (route) => false);
+                return const CupertinoActivityIndicator();
               case SignUpError _:
                 return throw UnimplementedError();
               case AuthenticationInitial _:

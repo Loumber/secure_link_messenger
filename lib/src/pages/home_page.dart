@@ -37,7 +37,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      
       resizeToAvoidBottomInset: false,
       body: Center(
         child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -64,8 +63,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             case IsAuthentication():
               MyLoggr('IsAuthentication');
               return PageStorage(
-                  bucket: _bucket, 
-                  child: pages[ref.watch(pageProvider)]);
+                  bucket: _bucket, child: pages[ref.watch(pageProvider)]);
             case SignUpError():
               MyLoggr('SignUpError');
               return const Placeholder();
@@ -76,9 +74,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  void MyLoggr(String str){
+  void MyLoggr(String str) {
     var logger = Logger(
-            printer: PrettyPrinter(),
+      printer: PrettyPrinter(),
     );
     logger.d(str);
   }

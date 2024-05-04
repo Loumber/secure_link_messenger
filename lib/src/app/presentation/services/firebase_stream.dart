@@ -5,6 +5,7 @@ import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bl
 import 'package:secure_link_messenger/src/pages/home_page.dart';
 import 'package:secure_link_messenger/src/pages/sing_in_page.dart';
 import 'package:logger/logger.dart';
+import 'package:secure_link_messenger/src/pages/verify_email_page.dart';
 
 class FirebaseStream extends StatelessWidget {
   const FirebaseStream({super.key});
@@ -20,17 +21,27 @@ class FirebaseStream extends StatelessWidget {
           if (snapshot.hasError) {
             return const Scaffold(
                 body: Center(child: Text('Что-то пошло не так!')));
-          } else if (snapshot.hasData && snapshot.data!.emailVerified) {
-            // snapshot.data!.delete();
-            logger.d('дом');
-            BlocProvider.of<AuthenticationBloc>(context)
-                .add(IsAuthenticationEvent());
-            return const HomePage();
+          } else if (snapshot.hasData) {
+            snapshot.data!.delete();
+            if (!snapshot.data!.emailVerified) {
+              //snapshot.data!.delete();
+              logger.d('Верификация');
+              BlocProvider.of<AuthenticationBloc>(context)
+                  .add(SignUpLoadedDataEvent());
+              return const VerifyEmailPage();
+            } else  {
+              logger.d('дом');
+              BlocProvider.of<AuthenticationBloc>(context)
+                  .add(IsAuthenticationEvent());
+              return const HomePage();
+            }
           } else {
-            //BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
-            //return const SignInPage();
-            BlocProvider.of<AuthenticationBloc>(context).add(IsAuthenticationEvent());
-            return const HomePage();
+            logger.d('Вход');
+            BlocProvider.of<AuthenticationBloc>(context).add(GoSignInEvent());
+            return const SignInPage();
+            //BlocProvider.of<AuthenticationBloc>(context)
+            //    .add(IsAuthenticationEvent());
+            //return const HomePage();
           }
         });
   }

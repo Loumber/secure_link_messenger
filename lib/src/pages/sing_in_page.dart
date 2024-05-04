@@ -57,7 +57,9 @@ class SignInPage extends StatelessWidget {
                 case SignUpEmailVerify _:
                   return const Placeholder();
                 case IsAuthentication():
-                  return const Placeholder();
+                  //Navigator.pushNamedAndRemoveUntil(
+                  //    context, AppRoutes.homeRoot, (route) => false);
+                  return const CupertinoActivityIndicator();
                 case SignUpError():
                   return const Placeholder();
                 case SignInLoading():

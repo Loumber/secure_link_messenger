@@ -20,11 +20,11 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<void> signIn() async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _dataProvider.getSignInUserFromDomain().email,
-        password: _dataProvider.getSignInUserFromDomain().email,
+        password: _dataProvider.getSignInUserFromDomain().password,
       );
+      _currentUser = FirebaseAuth.instance.currentUser!;
     } on FirebaseAuthException catch (e) {
       // ignore: avoid_print
       print(e);
@@ -101,5 +101,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     if (!_currentUser.emailVerified) {
       _currentUser.sendEmailVerification();
     }
+  }
+  
+  @override
+  bool isEmailVerification() {
+    return _currentUser.emailVerified;
   }
 }

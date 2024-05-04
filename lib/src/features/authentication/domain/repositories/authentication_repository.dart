@@ -6,4 +6,5 @@ abstract class AuthenticationRepository {
   Future<void> signUp();
   Future<void> deleteCurrentUser();
   void sendEmailVerification();
+  bool isEmailVerification();
 }

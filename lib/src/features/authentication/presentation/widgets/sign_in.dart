@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
@@ -112,9 +113,11 @@ class _SignInState extends State<SignIn> {
               ),
               onPressed: () {
                 if (isUnlockButton()) {
-                  AuthenticationBloc().add(SignInLoadingDataEvent(
+                  BlocProvider.of<AuthenticationBloc>(context)
+                  .add(SignInLoadingDataEvent(
                       email: email!, password: password!));
-                  Navigator.pushNamed(context, AppRoutes.verifyEmailRoot);
+                  
+                  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.homeRoot, (route) => false);
                 } else {
                   showCupertinoDialog(
                       context: context,
