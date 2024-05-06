@@ -18,3 +18,9 @@ final class SignUpEmailVerify extends AuthenticationState {}
 final class IsAuthentication extends AuthenticationState {}
 
 final class SignUpError extends AuthenticationState {}
+
+final class SignInError extends AuthenticationState {
+  final String error;
+
+  SignInError({required this.error});
+}

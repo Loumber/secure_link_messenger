@@ -3,10 +3,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:secure_link_messenger/src/features/authentication/data/provider/data_provider.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'dart:async';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final DataProvider _dataProvider = DataProvider();
 
+  final FirebaseAuth _firebaseAuth;
+
+  AuthenticationRepositoryImpl(
+    this._firebaseAuth,
+  );
+
+  bool get isAuthorized => _firebaseAuth.currentUser != null;
+
+  User? get user => _firebaseAuth.currentUser;
+
+  Stream<User?> get userStream => _firebaseAuth.userChanges();
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
+
+  //МОЕ
   late User _currentUser;
 
   late String _imageURL;
@@ -19,16 +37,14 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<void> signIn() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+    // await FirebaseAuth.instance.signInWithEmailAndPassword(
+    //   email: _dataProvider.getSignInUserFromDomain().email,
+    //   password: _dataProvider.getSignInUserFromDomain().password,
+    // );
+    //_currentUser = FirebaseAuth.instance.currentUser!;
+    await _firebaseAuth.signInWithEmailAndPassword(
         email: _dataProvider.getSignInUserFromDomain().email,
-        password: _dataProvider.getSignInUserFromDomain().password,
-      );
-      _currentUser = FirebaseAuth.instance.currentUser!;
-    } on FirebaseAuthException catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
+        password: _dataProvider.getSignInUserFromDomain().password);
   }
 
 /*
@@ -102,7 +118,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       _currentUser.sendEmailVerification();
     }
   }
-  
+
   @override
   bool isEmailVerification() {
     return _currentUser.emailVerified;

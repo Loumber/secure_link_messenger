@@ -42,6 +42,8 @@ class VerifyEmailPage extends StatelessWidget {
         case SignUpError _:
           MyLoggr('SignUpError');
           return const Placeholder();
+        case SignInError():
+          return const Placeholder();
       }
     })));
   }

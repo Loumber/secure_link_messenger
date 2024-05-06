@@ -1,5 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/pages/contacts_page.dart';
 import 'package:secure_link_messenger/src/pages/settings_page.dart';
 import 'package:secure_link_messenger/src/app/presentation/services/firebase_stream.dart';
@@ -11,11 +13,22 @@ import 'package:secure_link_messenger/src/pages/sing_in_page.dart';
 import 'package:secure_link_messenger/src/pages/verify_email_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final userRepository = MyLocator.userRepository;
+  @override
   Widget build(BuildContext context) {
+    var logger = Logger(
+      printer: PrettyPrinter(),
+    );
+    final isAuthorized = userRepository.isAuthorized;
+    logger.d(isAuthorized);
     return MultiBlocProvider(
         providers: [
           BlocProvider<AuthenticationBloc>(
@@ -32,9 +45,9 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            initialRoute: AppRoutes.initRoot,
+            initialRoute:
+                isAuthorized ? AppRoutes.homeRoot : AppRoutes.signInRoot,
             routes: <String, WidgetBuilder>{
-              AppRoutes.initRoot: (context) => const FirebaseStream(),
               AppRoutes.homeRoot: (context) => const HomePage(),
               AppRoutes.signInRoot: (context) => const SignInPage(),
               AppRoutes.signUpRoot: (context) => const SignUpPage(),
@@ -42,5 +55,11 @@ class MyApp extends StatelessWidget {
             },
           ),
         ));
+  }
+
+  @override
+  void dispose() {
+    MyLocator.dispose();
+    super.dispose();
   }
 }

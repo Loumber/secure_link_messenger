@@ -113,11 +113,9 @@ class _SignInState extends State<SignIn> {
               ),
               onPressed: () {
                 if (isUnlockButton()) {
-                  BlocProvider.of<AuthenticationBloc>(context)
-                  .add(SignInLoadingDataEvent(
-                      email: email!, password: password!));
-                  
-                  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.homeRoot, (route) => false);
+                  BlocProvider.of<AuthenticationBloc>(context).add(
+                      SignInLoadingDataEvent(
+                          email: email!, password: password!));
                 } else {
                   showCupertinoDialog(
                       context: context,
