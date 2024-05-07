@@ -63,8 +63,13 @@ class SignInPage extends StatelessWidget {
                   return const Placeholder();
                 case IsAuthentication():
                   logger.d('IsAuthentication');
-                  //Navigator.pushNamedAndRemoveUntil(
-                  //    context, AppRoutes.homeRoot, (route) => false);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppRoutes.homeRoot,
+                      (route) => false,
+                    );
+                  });
                   return const CupertinoActivityIndicator();
                 case SignUpError():
                   logger.d('SignUpError');
@@ -109,7 +114,7 @@ class SignInPage extends StatelessWidget {
                                 child: const Text('Ок'),
                                 onPressed: () {
                                   BlocProvider.of<AuthenticationBloc>(context)
-                                    .add(GoSignInEvent());
+                                      .add(GoSignInEvent());
                                 },
                               )
                             ])

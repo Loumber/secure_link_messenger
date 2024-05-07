@@ -13,7 +13,11 @@ final class SignUpLoading extends AuthenticationState {}
 
 final class SignInLoading extends AuthenticationState {}
 
-final class SignUpEmailVerify extends AuthenticationState {}
+final class SignUpEmailVerify extends AuthenticationState {
+  final String email;
+
+  SignUpEmailVerify({required this.email});
+}
 
 final class IsAuthentication extends AuthenticationState {}
 

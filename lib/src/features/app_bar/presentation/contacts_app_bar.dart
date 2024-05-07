@@ -18,7 +18,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(
-          width: 85.w,
+          width: 100.w,
         ),
         GestureDetector(
           child: const Icon(Icons.add_rounded),

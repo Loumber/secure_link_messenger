@@ -38,11 +38,15 @@ class _SignUpState extends State<SignUp> {
                   image == null ? Colors.red[700] : Colors.transparent,
               child: image != null
                   ? ClipOval(
-                      child: SizedBox(
-                      width: 90.w,
-                      height: 90.h,
-                      child: Image.file(image!),
-                    ))
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: SizedBox(
+                          width: 90.w,
+                          height: 90.h,
+                          child: Image.file(image!),
+                        ),
+                      ),
+                    )
                   : Stack(
                       children: [
                         Center(
@@ -281,9 +285,10 @@ class _SignUpState extends State<SignUp> {
                         email: email!,
                         name: name!,
                         password: password!));
-                    Navigator.pushNamed(context, AppRoutes.verifyEmailRoot);
+                    
                     BlocProvider.of<AuthenticationBloc>(context)
-                        .add(SignUpLoadedDataEvent());
+                        .add(IsAuthenticationEvent());
+                        Navigator.pushNamed(context, AppRoutes.homeRoot);
                   } else {
                     showCupertinoDialog(
                         context: context,

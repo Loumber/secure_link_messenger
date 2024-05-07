@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
+import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 import 'package:secure_link_messenger/src/features/authentication/presentation/widgets/veryfy_email.dart';
 
@@ -30,14 +31,16 @@ class VerifyEmailPage extends StatelessWidget {
         case SignInLoading _:
           MyLoggr('SignInLoading');
           return const Placeholder();
-        case SignUpEmailVerify _:
+        case SignUpEmailVerify state:
           MyLoggr('SignUpEmailVerify');
           return Padding(
             padding: EdgeInsets.fromLTRB(20.w, 90.h, 20.w, 0),
-            child: const VerifyEmail(),
+            child: VerifyEmail(email: state.email),
           );
         case IsAuthentication _:
           MyLoggr('IsAuthentication');
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.homeRoot, (route) => false);
           return const CupertinoActivityIndicator();
         case SignUpError _:
           MyLoggr('SignUpError');

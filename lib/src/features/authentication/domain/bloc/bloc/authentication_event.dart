@@ -29,7 +29,11 @@ class SignInLoadingDataEvent extends AuthenticationEvent {
   SignInLoadingDataEvent({required this.email, required this.password});
 }
 
-class SignUpLoadedDataEvent extends AuthenticationEvent {}
+class SignUpLoadedDataEvent extends AuthenticationEvent {
+  final String email;
+
+  SignUpLoadedDataEvent({required this.email});
+}
 
 class ErrorSignUp extends AuthenticationEvent {}
 

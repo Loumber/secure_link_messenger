@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/features/authentication/data/provider/domain_provider.dart';
 import 'package:secure_link_messenger/src/features/authentication/data/repositories/authentication_repository_impl.dart';
@@ -16,6 +17,10 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   DomainProvider _domainProvider = DomainProvider();
+
+  var logger = Logger(
+    printer: PrettyPrinter(),
+  );
 
   AuthenticationBloc()
       : super(MyLocator.userRepository.isAuthorized
@@ -33,10 +38,8 @@ class AuthenticationBloc
 
     on<SignInLoadingDataEvent>((event, emit) async {
       emit(SignInLoading());
-      _domainProvider.registerSignInUser(
-          UserSignInEntity(email: event.email, password: event.password));
       try {
-        await MyLocator.userRepository.signIn();
+        await MyLocator.userRepository.signIn(event.email, event.password);
         if (MyLocator.userRepository.isAuthorized) {
           emit(IsAuthentication());
         } else {
@@ -57,17 +60,10 @@ class AuthenticationBloc
 
     on<SignUpLoadingDataEvent>((event, emit) async {
       emit(SignUpLoading());
-      _domainProvider.registerSignUpUser(UserSignUpEntity(
-          email: event.email,
-          name: event.name,
-          password: event.password,
-          photo: event.photo));
-      await MyLocator.userRepository.signUp();
-      if (MyLocator.userRepository.isAuthorized) {
-        emit(IsAuthentication());
-      } else {
-        emit(SignUpInitial());
-      }
+
+      MyLocator.userRepository.setImage(event.photo);
+      await MyLocator.userRepository
+          .signUp(event.email, event.password, event.email);
     });
 
     on<CancelSignUpEvent>((event, emit) {
@@ -75,14 +71,7 @@ class AuthenticationBloc
     });
 
     on<SignUpLoadedDataEvent>((event, emit) {
-      emit(SignUpEmailVerify());
-      bool isVerificated = MyLocator.userRepository.isEmailVerification();
-      while (!isVerificated) {
-        Future.delayed(const Duration(seconds: 1), () {
-          isVerificated = MyLocator.userRepository.isEmailVerification();
-        });
-      }
-      emit(IsAuthentication());
+      emit(SignUpEmailVerify(email: event.email));
     });
 
     on<IsAuthenticationEvent>((event, emit) {
