@@ -3,9 +3,40 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:secure_link_messenger/src/features/authentication/data/provider/data_provider.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'dart:async';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final DataProvider _dataProvider = DataProvider();
+
+  final FirebaseAuth _firebaseAuth;
+
+  late File _avatar;
+
+  AuthenticationRepositoryImpl(
+    this._firebaseAuth,
+  );
+
+  bool get isEmailVerification {
+    if (isAuthorized) {
+      if (_firebaseAuth.currentUser!.emailVerified) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  bool get isAuthorized => _firebaseAuth.currentUser != null;
+
+  User? get user => _firebaseAuth.currentUser;
+
+  Stream<User?> get userStream => _firebaseAuth.userChanges();
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
 
   late User _currentUser;
 
@@ -18,47 +49,20 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<void> signIn() async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _dataProvider.getSignInUserFromDomain().email,
-        password: _dataProvider.getSignInUserFromDomain().email,
-      );
-    } on FirebaseAuthException catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
+  Future<void> signIn(String email, String password) async {
+    await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
   }
-
-/*
-
-  Future<bool> isAuthenticated() async {
-    final currentUser = _firebaseAuth.currentUser;
-    return currentUser != null;
-  }
-
-  Future<User> getCurrentUser() async {
-    return _firebaseAuth.currentUser!;
-  }
-
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
-  }
-
-*/
 
   @override
-  Future<void> signUp() async {
+  Future<void> signUp(String email, String password, String name) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _dataProvider.getSignUpUserFromDomain().email,
-          password: _dataProvider.getSignUpUserFromDomain().password);
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       _currentUser = FirebaseAuth.instance.currentUser!;
 
-      await _currentUser
-          .updateDisplayName(_dataProvider.getSignUpUserFromDomain().name);
+      await _currentUser.updateDisplayName(name);
       sendEmailVerification();
       _imageURL = await dischargePhoto();
 
@@ -69,14 +73,17 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
   }
 
+  void setImage(File avatar) {
+    _avatar = avatar;
+  }
+
   @override
   Future<String> dischargePhoto() async {
-    File file = _dataProvider.getSignUpUserFromDomain().photo;
     try {
       firebase_storage.FirebaseStorage storage =
           firebase_storage.FirebaseStorage.instance;
-      firebase_storage.Reference ref = storage.ref().child(file.path);
-      await ref.putFile(file);
+      firebase_storage.Reference ref = storage.ref().child(_avatar.path);
+      await ref.putFile(_avatar);
 
       return await ref.getDownloadURL();
     } catch (e) {

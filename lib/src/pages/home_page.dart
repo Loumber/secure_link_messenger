@@ -22,8 +22,6 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   final PageStorageBucket _bucket = PageStorageBucket();
 
-
-
   List<Widget> pages = [
     const ContactsPage(key: PageStorageKey('Contacts_page')),
     const MessagePage(key: PageStorageKey('Message_page')),
@@ -32,14 +30,17 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var logger = Logger(
+      printer: PrettyPrinter(),
+    );
+    logger.d('Homepage');
     return Scaffold(
-      appBar:AppBar(
-        title:
-         ref.watch(pageProvider) == 0 ?  const ContactsAppBar() : 
-         ref.watch(pageProvider) == 1 ?  const MessageAppBar() :
-         null    
-      ),
-      
+      appBar: AppBar(
+          title: ref.watch(pageProvider) == 0
+              ? const ContactsAppBar()
+              : ref.watch(pageProvider) == 1
+                  ? const MessageAppBar()
+                  : null),
       resizeToAvoidBottomInset: false,
       body: Center(
         child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -66,10 +67,12 @@ class _HomePageState extends ConsumerState<HomePage> {
             case IsAuthentication():
               MyLoggr('IsAuthentication');
               return PageStorage(
-                  bucket: _bucket, 
-                  child: pages[ref.watch(pageProvider)]);
+                  bucket: _bucket, child: pages[ref.watch(pageProvider)]);
             case SignUpError():
               MyLoggr('SignUpError');
+              return const Placeholder();
+            case SignInError():
+              MyLoggr('SignInError');
               return const Placeholder();
           }
         }),
@@ -78,9 +81,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  void MyLoggr(String str){
+  void MyLoggr(String str) {
     var logger = Logger(
-            printer: PrettyPrinter(),
+      printer: PrettyPrinter(),
     );
     logger.d(str);
   }

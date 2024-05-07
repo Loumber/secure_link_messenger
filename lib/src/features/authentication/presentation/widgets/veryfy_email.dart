@@ -8,7 +8,9 @@ import 'package:secure_link_messenger/src/features/authentication/data/provider/
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 
 class VerifyEmail extends StatefulWidget {
-  const VerifyEmail({super.key});
+  const VerifyEmail({super.key, required this.email});
+
+  final String email;
 
   @override
   State<VerifyEmail> createState() => _VerifyEmailState();
@@ -16,7 +18,6 @@ class VerifyEmail extends StatefulWidget {
 
 class _VerifyEmailState extends State<VerifyEmail> {
   String? code;
-  String email = PresentationProvider().getSignUpUserFromDomain().email;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: email,
+                    text: widget.email,
                     style: TextStyle(
                       color: getColorFromHex("#6C6C6D"),
                       decoration: TextDecoration.underline,

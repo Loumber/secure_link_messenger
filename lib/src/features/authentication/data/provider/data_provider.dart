@@ -5,10 +5,6 @@ import 'package:secure_link_messenger/src/features/authentication/domain/entitie
 class DataProvider {
   final GetIt getIt = GetIt.instance;
 
-  UserSignUpEntity getSignUpUserFromDomain() {
-    return getIt.get();
-  }
-
   UserSignInEntity getSignInUserFromDomain() {
     return getIt.get();
   }
