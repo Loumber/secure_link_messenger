@@ -74,6 +74,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         'email': _currentUser.email,
         'status': 'Soon',
         'imageUrl': _imageURL,
+        'friends': [],
       });
     } on FirebaseAuthException catch (e) {
       // ignore: avoid_print

@@ -50,6 +50,7 @@ dependencies:
   rive: ^0.13.2
   flutter_riverpod: ^2.5.1
   cloud_firestore: ^4.17.3
+  http: ^1.2.1
   
 
 dev_dependencies:

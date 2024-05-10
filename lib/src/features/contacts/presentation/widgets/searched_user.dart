@@ -7,10 +7,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
 
 class SearchedUser extends StatelessWidget {
-  const SearchedUser({super.key, required this.name});
+  const SearchedUser({super.key, required this.name, required this.avatar, required this.uId});
 
-  //final File avatar;
+  final File avatar;
   final String name;
+  final String uId;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,9 @@ class SearchedUser extends StatelessWidget {
           width: 200.w,
         ),
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            
+          },
           child: Icon(
             Icons.person_add_alt_1_rounded,
             color: Colors.red[900],

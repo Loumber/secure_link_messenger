@@ -5,12 +5,16 @@ import 'package:secure_link_messenger/src/features/authentication/data/repositor
 import 'package:firebase_core/firebase_core.dart';
 import 'package:secure_link_messenger/firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:secure_link_messenger/src/features/contacts/data/repositories/contacts_repository_impl.dart';
 
 abstract class MyLocator {
   static final _locator = GetIt.instance;
 
   static AuthenticationRepositoryImpl get userRepository =>
       _locator<AuthenticationRepositoryImpl>();
+
+  static ContactsRepositoryImpl get contactsRepository =>
+      _locator<ContactsRepositoryImpl>();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +29,9 @@ abstract class MyLocator {
       AuthenticationRepositoryImpl(
           _locator<FirebaseAuth>(), _locator<FirebaseFirestore>()),
     );
+
+    _locator.registerSingleton(ContactsRepositoryImpl(
+        _locator<FirebaseFirestore>(), _locator<FirebaseAuth>()));
   }
 
   static Future<void> _initFirebase() async {

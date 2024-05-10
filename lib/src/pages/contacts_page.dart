@@ -13,9 +13,11 @@ class ContactsPage extends StatelessWidget {
         case ShowMyContacts():
           return Container();
         case SearchContacts():
-          return const AddContactsPage();
+          return AddContactsPage();
         case AddToMyContacts():
           return Container();
+        case SearchedContacts():
+          return AddContactsPage();
       }
     });
   }

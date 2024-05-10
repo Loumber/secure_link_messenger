@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
+import 'package:secure_link_messenger/src/features/contacts/domain/entities/searched_user_entity.dart';
 import 'package:secure_link_messenger/src/features/contacts/presentation/widgets/searched_user.dart';
 
 class AddContactsPage extends StatelessWidget {
@@ -13,7 +16,10 @@ class AddContactsPage extends StatelessWidget {
         Padding(
           padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 0),
           child: CupertinoTextField(
-            onChanged: (value) {},
+            onChanged: (value) {
+              BlocProvider.of<ContactsBloc>(context)
+                  .add(SearchContactsEvent(nameUser: value));
+            },
             padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 8.h),
             decoration: BoxDecoration(
               color: Colors.grey[350],
@@ -37,10 +43,34 @@ class AddContactsPage extends StatelessWidget {
           ),
         ),
         const SizedBox(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: const SearchedUser(name: 'Максим'),
-        ),
+        BlocBuilder<ContactsBloc, ContactsState>(
+          builder: (context, state) {
+            switch (state) {
+              case ShowMyContacts():
+                return const SizedBox();
+              case SearchContacts():
+                return const SizedBox();
+              case AddToMyContacts():
+                return const SizedBox();
+              case SearchedContacts():
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: state.searchedUsers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SearchedUser(
+                        name: state.searchedUsers[index].contactName,
+                        avatar: state.searchedUsers[index].avatar,
+                        uId: state.searchedUsers[index].uId,
+                      ),
+                    );
+                  },
+                );
+            }
+          },
+        )
       ],
     );
   }
