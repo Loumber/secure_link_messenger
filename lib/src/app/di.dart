@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:secure_link_messenger/src/features/authentication/data/repositories/authentication_repository_impl.dart';
@@ -16,10 +17,14 @@ abstract class MyLocator {
     await _initFirebase();
 
     _locator.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+     _locator.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance,
+    );
 
     _locator.registerSingleton<AuthenticationRepositoryImpl>(
       AuthenticationRepositoryImpl(
         _locator<FirebaseAuth>(),
+        _locator<FirebaseFirestore>()
       ),
     );
   }
