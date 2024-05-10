@@ -285,10 +285,10 @@ class _SignUpState extends State<SignUp> {
                         email: email!,
                         name: name!,
                         password: password!));
-                    
+
                     BlocProvider.of<AuthenticationBloc>(context)
                         .add(IsAuthenticationEvent());
-                        Navigator.pushNamed(context, AppRoutes.homeRoot);
+                    Navigator.pushNamed(context, AppRoutes.homeRoot);
                   } else {
                     showCupertinoDialog(
                         context: context,

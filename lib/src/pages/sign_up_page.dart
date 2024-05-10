@@ -43,8 +43,13 @@ class SignUpPage extends StatelessWidget {
                   ],
                 );
               case IsAuthentication _:
-                Navigator.pushNamedAndRemoveUntil(
-                    context, AppRoutes.homeRoot, (route) => false);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRoutes.homeRoot,
+                    (route) => false,
+                  );
+                });
                 return const CupertinoActivityIndicator();
               case SignUpError _:
                 return throw UnimplementedError();

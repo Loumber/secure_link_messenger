@@ -17,15 +17,13 @@ abstract class MyLocator {
     await _initFirebase();
 
     _locator.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
-     _locator.registerLazySingleton<FirebaseFirestore>(
+    _locator.registerLazySingleton<FirebaseFirestore>(
       () => FirebaseFirestore.instance,
     );
 
     _locator.registerSingleton<AuthenticationRepositoryImpl>(
       AuthenticationRepositoryImpl(
-        _locator<FirebaseAuth>(),
-        _locator<FirebaseFirestore>()
-      ),
+          _locator<FirebaseAuth>(), _locator<FirebaseFirestore>()),
     );
   }
 

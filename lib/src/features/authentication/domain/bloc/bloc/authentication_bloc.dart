@@ -4,11 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/app/di.dart';
-import 'package:secure_link_messenger/src/features/authentication/data/provider/domain_provider.dart';
-import 'package:secure_link_messenger/src/features/authentication/data/repositories/authentication_repository_impl.dart';
-import 'package:secure_link_messenger/src/features/authentication/domain/entities/sign_in/user_sign_in_entity.dart';
-import 'package:secure_link_messenger/src/features/authentication/domain/entities/sign_up/user_sign_up_entity.dart';
-import 'package:secure_link_messenger/src/features/authentication/domain/entities/user/user_entity.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 
 part 'authentication_event.dart';
@@ -16,7 +11,7 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  DomainProvider _domainProvider = DomainProvider();
+
 
   var logger = Logger(
     printer: PrettyPrinter(),
@@ -33,8 +28,6 @@ class AuthenticationBloc
     on<GoSignUpEvent>((event, emit) {
       emit(SignUpInitial());
     });
-
-    //   on<GoAuthenticationEvent>(_checkAuthentication());
 
     on<SignInLoadingDataEvent>((event, emit) async {
       emit(SignInLoading());
@@ -63,7 +56,7 @@ class AuthenticationBloc
 
       MyLocator.userRepository.setImage(event.photo);
       await MyLocator.userRepository
-          .signUp(event.email, event.password, event.email);
+          .signUp(event.email, event.password, event.name);
     });
 
     on<CancelSignUpEvent>((event, emit) {
