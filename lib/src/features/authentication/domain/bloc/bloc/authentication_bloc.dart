@@ -11,8 +11,6 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-
-
   var logger = Logger(
     printer: PrettyPrinter(),
   );

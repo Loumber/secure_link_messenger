@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-
 class MessageAppBar extends StatefulWidget {
   const MessageAppBar({super.key});
 

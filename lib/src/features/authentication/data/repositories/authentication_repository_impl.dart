@@ -6,8 +6,6 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:async';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
-  
-
   final FirebaseAuth _firebaseAuth;
 
   final FirebaseFirestore _firebaseFirestore;

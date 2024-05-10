@@ -12,6 +12,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
     on<SearchContactsEvent>((event, emit) {
       emit(SearchContacts());
+      if(event.nameUser.isNotEmpty){
+
+      }
     });
 
     on<AddContactsEvent>((event, emit) {
