@@ -5,4 +5,5 @@ class AppRoutes {
   static const signUpRoot = 'sign_up';
   static const verifyEmailRoot = 'verify_email';
   static const addContacts = 'add_contacts';
+  static const messagePage = 'go_message';
 }

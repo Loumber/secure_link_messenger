@@ -46,11 +46,11 @@ class MyContacts extends StatelessWidget {
           itemCount: myContacts.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ContactCard(avatar: myContacts[index].avatar,
-              name: myContacts[index].contactName,
-              uId: myContacts[index].uId)
-            );
+                padding: const EdgeInsets.all(8.0),
+                child: ContactCard(
+                    avatar: myContacts[index].avatar,
+                    name: myContacts[index].contactName,
+                    uId: myContacts[index].uId));
           },
         )
       ],

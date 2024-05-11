@@ -27,14 +27,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
         .where('name', isLessThan: userName + 'z')
         .get();
     for (var doc in querySnapshot.docs) {
-      if(doc.id != _firebaseAuth.currentUser!.uid){
-      var photo = await downloadPhoto(doc.data()['imageUrl']);
-      var user = SearchedUserEntity(
-        contactName: doc.data()['name'],
-        avatar: photo,
-        uId: doc.id,
-      );
-      searchedUsers.add(user);}
+      if (doc.id != _firebaseAuth.currentUser!.uid) {
+        var photo = await downloadPhoto(doc.data()['imageUrl']);
+        var user = SearchedUserEntity(
+          contactName: doc.data()['name'],
+          avatar: photo,
+          uId: doc.id,
+        );
+        searchedUsers.add(user);
+      }
     }
     return searchedUsers;
   }
