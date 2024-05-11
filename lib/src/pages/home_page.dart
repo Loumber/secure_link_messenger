@@ -42,41 +42,39 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ? const MessageAppBar()
                   : null),
       resizeToAvoidBottomInset: false,
-      body: Center(
-        child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-            builder: (context, state) {
-          switch (state) {
-            case AuthenticationInitial():
-              MyLoggr('AuthenticationInitial');
-              return const Placeholder();
-            case SignUpInitial():
-              MyLoggr('SignUpInitial');
-              return const Placeholder();
-            case SignInInitial():
-              MyLoggr('SignInInitial');
-              return const Placeholder();
-            case SignUpLoading():
-              MyLoggr('SignUpInitial');
-              return const CupertinoActivityIndicator();
-            case SignInLoading():
-              MyLoggr('SignInLoading');
-              return const CupertinoActivityIndicator();
-            case SignUpEmailVerify():
-              MyLoggr('SignUpEmailVerify');
-              return const CupertinoActivityIndicator();
-            case IsAuthentication():
-              MyLoggr('IsAuthentication');
-              return PageStorage(
-                  bucket: _bucket, child: pages[ref.watch(pageProvider)]);
-            case SignUpError():
-              MyLoggr('SignUpError');
-              return const Placeholder();
-            case SignInError():
-              MyLoggr('SignInError');
-              return const Placeholder();
-          }
-        }),
-      ),
+      body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          builder: (context, state) {
+        switch (state) {
+          case AuthenticationInitial():
+            MyLoggr('AuthenticationInitial');
+            return const Placeholder();
+          case SignUpInitial():
+            MyLoggr('SignUpInitial');
+            return const Placeholder();
+          case SignInInitial():
+            MyLoggr('SignInInitial');
+            return const Placeholder();
+          case SignUpLoading():
+            MyLoggr('SignUpInitial');
+            return const CupertinoActivityIndicator();
+          case SignInLoading():
+            MyLoggr('SignInLoading');
+            return const CupertinoActivityIndicator();
+          case SignUpEmailVerify():
+            MyLoggr('SignUpEmailVerify');
+            return const CupertinoActivityIndicator();
+          case IsAuthentication():
+            MyLoggr('IsAuthentication');
+            return PageStorage(
+                bucket: _bucket, child: pages[ref.watch(pageProvider)]);
+          case SignUpError():
+            MyLoggr('SignUpError');
+            return const Placeholder();
+          case SignInError():
+            MyLoggr('SignInError');
+            return const Placeholder();
+        }
+      }),
       bottomNavigationBar: const MyNavigationBar(),
     );
   }

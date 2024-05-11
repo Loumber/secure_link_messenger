@@ -124,7 +124,7 @@ class _SignUpState extends State<SignUp> {
               },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
-                color: getColorFromHex('#E9E9E9'),
+                color: Colors.grey[350],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'имя',
@@ -152,7 +152,7 @@ class _SignUpState extends State<SignUp> {
               },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
-                color: getColorFromHex('#E9E9E9'),
+                color: Colors.grey[350],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'почта',
@@ -180,7 +180,7 @@ class _SignUpState extends State<SignUp> {
               },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
-                color: getColorFromHex('#E9E9E9'),
+                color: Colors.grey[350],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'пароль',
@@ -226,7 +226,7 @@ class _SignUpState extends State<SignUp> {
                 confirmationPassword = value;
               },
               decoration: BoxDecoration(
-                color: getColorFromHex('#E9E9E9'),
+                color: Colors.grey[350],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'пароль',
@@ -285,10 +285,10 @@ class _SignUpState extends State<SignUp> {
                         email: email!,
                         name: name!,
                         password: password!));
-                    
+
                     BlocProvider.of<AuthenticationBloc>(context)
                         .add(IsAuthenticationEvent());
-                        Navigator.pushNamed(context, AppRoutes.homeRoot);
+                    Navigator.pushNamed(context, AppRoutes.homeRoot);
                   } else {
                     showCupertinoDialog(
                         context: context,

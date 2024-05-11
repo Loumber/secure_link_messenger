@@ -4,4 +4,5 @@ class AppRoutes {
   static const signInRoot = 'sign_in';
   static const signUpRoot = 'sign_up';
   static const verifyEmailRoot = 'verify_email';
+  static const addContacts = 'add_contacts';
 }

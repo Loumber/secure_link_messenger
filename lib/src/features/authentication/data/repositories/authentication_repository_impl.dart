@@ -1,19 +1,20 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:secure_link_messenger/src/features/authentication/data/provider/data_provider.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:async';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
-  final DataProvider _dataProvider = DataProvider();
-
   final FirebaseAuth _firebaseAuth;
+
+  final FirebaseFirestore _firebaseFirestore;
 
   late File _avatar;
 
   AuthenticationRepositoryImpl(
     this._firebaseAuth,
+    this._firebaseFirestore,
   );
 
   bool get isEmailVerification {
@@ -66,7 +67,15 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       sendEmailVerification();
       _imageURL = await dischargePhoto();
 
-      _currentUser.updatePhotoURL(_imageURL);
+      await _currentUser.updatePhotoURL(_imageURL);
+
+      await _firebaseFirestore.collection('users').doc(_currentUser.uid).set({
+        'name': name,
+        'email': _currentUser.email,
+        'status': 'Soon',
+        'imageUrl': _imageURL,
+        'friends': [],
+      });
     } on FirebaseAuthException catch (e) {
       // ignore: avoid_print
       print(e);

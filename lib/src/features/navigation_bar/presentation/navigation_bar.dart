@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rive/rive.dart';
+import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
 import 'package:secure_link_messenger/src/features/navigation_bar/data/providers/page_provider.dart';
 import 'package:secure_link_messenger/src/features/navigation_bar/data/repositories/navigation_%20bar_items_repository_impl.dart';
 
@@ -64,6 +66,9 @@ class __MyNavigationBarState extends ConsumerState<MyNavigationBar> {
               });
               if (index != selectedItem) {
                 ref.watch(pageProvider.notifier).update((state) => index);
+              }
+              if (index == 0) {
+                BlocProvider.of<ContactsBloc>(context).add(MyContactsEvent());
               }
               setState(() {
                 selectedItem = index;

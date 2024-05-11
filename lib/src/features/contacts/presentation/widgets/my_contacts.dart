@@ -1,28 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
-import 'package:secure_link_messenger/src/features/contacts/presentation/widgets/add_contacts.dart';
-import 'package:secure_link_messenger/src/features/contacts/presentation/widgets/my_contacts.dart';
+import 'package:secure_link_messenger/src/features/contacts/domain/entities/searched_user_entity.dart';
+import 'package:secure_link_messenger/src/features/contacts/presentation/widgets/contact_card.dart';
+import 'package:secure_link_messenger/src/features/contacts/presentation/widgets/searched_user.dart';
 
-class ContactsPage extends StatelessWidget {
-  const ContactsPage({super.key});
+class MyContacts extends StatelessWidget {
+  MyContacts({super.key, required this.myContacts});
+
+  List<SearchedUserEntity> myContacts;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
-      switch (state) {
-        case ShowMyContacts():
-          return MyContacts(myContacts: state.myContacts);
-        case SearchContacts():
-          return const AddContactsPage();
-        case AddToMyContacts():
-          return Container();
-        case SearchedContacts():
-          return const AddContactsPage();
-        case InitialContacts():
-          return Padding(
+    return ListView(
+      children: [
+        Padding(
           padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 0),
           child: CupertinoTextField(
             onChanged: (value) {},
@@ -47,12 +39,25 @@ class ContactsPage extends StatelessWidget {
               ),
             ),
           ),
-        );
-      }
-    });
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: myContacts.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ContactCard(avatar: myContacts[index].avatar,
+              name: myContacts[index].contactName,
+              uId: myContacts[index].uId)
+            );
+          },
+        )
+      ],
+    );
   }
 
-    Color getColorFromHex(String hexColor) {
+  Color getColorFromHex(String hexColor) {
     var hex = hexColor.replaceAll('#', '');
     if (hex.length == 6) {
       hex = 'FF$hex';

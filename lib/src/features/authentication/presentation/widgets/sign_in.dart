@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 
 class SignIn extends StatefulWidget {
@@ -34,7 +33,7 @@ class _SignInState extends State<SignIn> {
             },
             padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
             decoration: BoxDecoration(
-              color: getColorFromHex('#E9E9E9'),
+              color: Colors.grey[350],
               borderRadius: BorderRadius.circular((10)),
             ),
             placeholder: 'почта',
@@ -59,7 +58,7 @@ class _SignInState extends State<SignIn> {
           CupertinoTextField(
             padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
             decoration: BoxDecoration(
-              color: getColorFromHex('#E9E9E9'),
+              color: Colors.grey[350],
               borderRadius: BorderRadius.circular((10)),
             ),
             placeholder: 'пароль',
