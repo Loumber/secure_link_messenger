@@ -4,7 +4,6 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/features/contacts/domain/entities/searched_user_entity.dart';
 import 'package:secure_link_messenger/src/features/contacts/domain/repositories/contacts_repository.dart';
 
@@ -38,6 +37,33 @@ class ContactsRepositoryImpl implements ContactsRepository {
       searchedUsers.add(user);
     }
     return searchedUsers;
+  }
+
+  Future<bool> isFriend(String uId) async {
+    var currentUserDoc = await _firebaseFirestore
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .get();
+    var friendsList = currentUserDoc.data()?['friends'] ?? [];
+    return friendsList.contains(uId);
+  }
+
+  Future<void> addFriend(String uId) async {
+    bool flag = await isFriend(uId);
+    if (!flag) {
+      var currentUserDoc = await _firebaseFirestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser!.uid)
+          .get();
+      var friendsList = currentUserDoc.data()?['friends'] ?? [];
+      friendsList.add(uId);
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser!.uid)
+          .update({
+        'friends': friendsList,
+      });
+    }
   }
 
   Future<File> downloadPhoto(String url) async {

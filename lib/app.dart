@@ -34,7 +34,8 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<ContactsBloc>(
             create: (context) => ContactsBloc(),
-          )
+          ),
+
         ],
         child: ScreenUtilInit(
           designSize: const Size(375, 804),
