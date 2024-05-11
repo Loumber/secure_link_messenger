@@ -15,13 +15,20 @@ class ContactCard extends StatelessWidget {
     return Row(
       children: [
         CircleAvatar(
-          radius: 35.sp,
-          child: Image.file(avatar),
+          radius: 30.sp,
+          child: ClipOval(
+            child: SizedBox(
+              height: 90.h,
+              width: 90.w,
+              child: Image.file(avatar))),
+        ),
+        SizedBox(
+          width: 5.w,
         ),
         Text(
           name,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),

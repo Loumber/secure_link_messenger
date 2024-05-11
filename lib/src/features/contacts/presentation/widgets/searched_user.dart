@@ -40,8 +40,12 @@ class _SearchedUserState extends State<SearchedUser> {
     return Row(
       children: [
         CircleAvatar(
-          radius: 35.sp,
-          child: Image.file(widget.avatar),
+          radius: 30.sp,
+          child: ClipOval(
+            child: SizedBox(
+              height: 90.h,
+              width: 90.w,
+              child: Image.file(widget.avatar))),
         ),
         Text(
           widget.name,

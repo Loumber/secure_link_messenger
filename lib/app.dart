@@ -27,6 +27,7 @@ class _MyAppState extends State<MyApp> {
     );
     final isAuthorized = userRepository.isAuthorized;
     logger.d(isAuthorized);
+    //userRepository.signOut();
     return MultiBlocProvider(
         providers: [
           BlocProvider<AuthenticationBloc>(
