@@ -8,7 +8,8 @@ part 'contacts_state.dart';
 
 class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   ContactsBloc() : super(ShowMyContacts()) {
-    on<MyContactsEvent>((event, emit) {
+    on<MyContactsEvent>((event, emit) async{
+      await MyLocator.contactsRepository.getFriendList();
       emit(ShowMyContacts());
     });
 

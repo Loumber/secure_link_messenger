@@ -35,6 +35,7 @@ class MyContacts extends StatelessWidget {
                 color: getColorFromHex("#6C6C6D"),
               ),
             ),
+            
           ),
         ),
       ],

@@ -66,6 +66,45 @@ class ContactsRepositoryImpl implements ContactsRepository {
     }
   }
 
+
+
+  Future<List<SearchedUserEntity>> getFriendList() async {
+  try {
+    var logger = Logger(
+      printer: PrettyPrinter(),
+    );
+    logger.d('Ущу друзей');
+    var currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).get();
+    if (currentUserDoc.exists) {
+      var friendsList = currentUserDoc.data()?['friends'] ?? [];
+      List<SearchedUserEntity> friendEntities = [];
+      for (var friendUid in friendsList) {
+        var friendDoc = await FirebaseFirestore.instance.collection('users').doc(friendUid).get();
+        if (friendDoc.exists) {
+          var friendData = friendDoc.data();
+          logger.d(friendData?['name']);
+          var friend = SearchedUserEntity(
+            contactName: friendData?['name'],
+            avatar: await downloadPhoto(friendData?['imageUrl']),
+            uId: friendUid,
+          );
+          friendEntities.add(friend);
+        }
+      }
+      
+      return friendEntities;
+    } else {
+      print('Текущий пользователь не найден в базе данных');
+      return [];
+    }
+  } catch (e) {
+    print('Ошибка при получении списка друзей: $e');
+    return [];
+  }
+}
+
+
+
   Future<File> downloadPhoto(String url) async {
     try {
       final response = await http.get(Uri.parse(url));
