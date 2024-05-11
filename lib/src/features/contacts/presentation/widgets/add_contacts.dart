@@ -68,6 +68,8 @@ class AddContactsPage extends StatelessWidget {
                     );
                   },
                 );
+              case InitialContacts():
+                return const SizedBox();
             }
           },
         )

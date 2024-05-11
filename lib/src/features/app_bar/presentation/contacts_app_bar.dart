@@ -48,6 +48,14 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                   BlocProvider.of<ContactsBloc>(context).add(MyContactsEvent());
                 },
               );
+            case InitialContacts():
+              return GestureDetector(
+                child: const Icon(Icons.add_rounded),
+                onTap: () {
+                  BlocProvider.of<ContactsBloc>(context)
+                      .add(AddContactsEvent());
+                },
+              );
           }
         },
       )

@@ -2,7 +2,13 @@ part of 'contacts_bloc.dart';
 
 sealed class ContactsState {}
 
-final class ShowMyContacts extends ContactsState {}
+final class InitialContacts extends ContactsState {}
+
+final class ShowMyContacts extends ContactsState {
+  List<SearchedUserEntity> myContacts;
+
+  ShowMyContacts(this.myContacts);
+}
 
 final class SearchContacts extends ContactsState {}
 
