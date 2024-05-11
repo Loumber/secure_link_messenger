@@ -25,16 +25,16 @@ class ContactsRepositoryImpl implements ContactsRepository {
         .collection('users')
         .where('name', isGreaterThanOrEqualTo: userName)
         .where('name', isLessThan: userName + 'z')
-        //.where('email', isNotEqualTo: _firebaseAuth.currentUser!.email)
         .get();
     for (var doc in querySnapshot.docs) {
+      if(doc.id != _firebaseAuth.currentUser!.uid){
       var photo = await downloadPhoto(doc.data()['imageUrl']);
       var user = SearchedUserEntity(
         contactName: doc.data()['name'],
         avatar: photo,
         uId: doc.id,
       );
-      searchedUsers.add(user);
+      searchedUsers.add(user);}
     }
     return searchedUsers;
   }
