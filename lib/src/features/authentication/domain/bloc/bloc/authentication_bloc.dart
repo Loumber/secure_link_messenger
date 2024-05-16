@@ -28,9 +28,12 @@ class AuthenticationBloc
     });
 
     on<SignInLoadingDataEvent>((event, emit) async {
+      logger.d('Нупиздяо');
       emit(SignInLoading());
       try {
+        logger.d('Нупиздец');
         await MyLocator.userRepository.signIn(event.email, event.password);
+        logger.d('Засигинился');
         if (MyLocator.userRepository.isAuthorized) {
           emit(IsAuthentication());
         } else {

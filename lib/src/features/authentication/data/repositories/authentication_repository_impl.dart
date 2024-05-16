@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:async';
@@ -51,6 +52,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<void> signIn(String email, String password) async {
+    var logger = Logger(
+      printer: PrettyPrinter(),
+    );
+    logger.d(email);
+
+    logger.d(password);
     await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
   }

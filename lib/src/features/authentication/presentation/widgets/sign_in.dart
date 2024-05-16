@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 
 class SignIn extends StatefulWidget {
@@ -111,7 +112,11 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               onPressed: () {
+                var logger = Logger(
+                  printer: PrettyPrinter(),
+                );
                 if (isUnlockButton()) {
+                  logger.d('Нупиздяо');
                   BlocProvider.of<AuthenticationBloc>(context).add(
                       SignInLoadingDataEvent(
                           email: email!, password: password!));
