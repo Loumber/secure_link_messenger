@@ -45,12 +45,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late String _imageURL;
 
   @override
-  Future<bool> checkUser(String email) {
-    // TODO: implement checkUser
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> signIn(String email, String password) async {
     var logger = Logger(
       printer: PrettyPrinter(),
@@ -82,6 +76,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         'status': 'Soon',
         'imageUrl': _imageURL,
         'friends': [],
+        'chats': []
       });
     } on FirebaseAuthException catch (e) {
       // ignore: avoid_print
@@ -103,15 +98,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
       return await ref.getDownloadURL();
     } catch (e) {
-      print(e);
+      rethrow;
     }
-    return '';
   }
 
-  @override
-  Future<String> downloadPhotoUrl() {
-    // TODO: implement downloadPhotoUrl
-    throw UnimplementedError();
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;
   }
 
   @override

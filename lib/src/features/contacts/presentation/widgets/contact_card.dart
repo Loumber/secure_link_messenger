@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
-import 'package:secure_link_messenger/src/pages/messaging_page.dart';
+import 'package:secure_link_messenger/src/features/messaging/presentation/widgets/chat_screen.dart';
 
 class ContactCard extends StatelessWidget {
   const ContactCard(
@@ -17,7 +16,7 @@ class ContactCard extends StatelessWidget {
     return GestureDetector(
       onTap: () =>
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return MessagingPage(name: name, avatar: avatar, uId: uId);
+        return ChatScreen(avatar: avatar, name: name, uId: uId);
       })),
       child: Container(
         width: double.infinity,
@@ -25,13 +24,11 @@ class ContactCard extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              radius: 30.sp,
-              child: ClipOval(
-                  child: SizedBox(
-                      height: 90.h, width: 90.w, child: Image.file(avatar))),
+              radius: 25,
+              backgroundImage: FileImage(avatar),
             ),
             SizedBox(
-              width: 5.w,
+              width: 15.w,
             ),
             Text(
               name,

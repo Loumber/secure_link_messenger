@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:secure_link_messenger/src/features/contacts/domain/entities/searched_user_entity.dart';
-import 'package:secure_link_messenger/src/features/contacts/presentation/widgets/contact_card.dart';
+import 'package:secure_link_messenger/src/features/messaging/domain/entities/chat/chat_entity.dart';
+import 'package:secure_link_messenger/src/features/messaging/presentation/widgets/chat_card.dart';
 
 // ignore: must_be_immutable
-class MyContacts extends StatelessWidget {
-  MyContacts({super.key, required this.myContacts});
+class MyChats extends StatelessWidget {
+  List<ChatEntity> myChats;
 
-  List<SearchedUserEntity> myContacts;
+  MyChats({super.key, required this.myChats});
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +40,28 @@ class MyContacts extends StatelessWidget {
             ),
           ),
         ),
-        ListView.builder(
+        SizedBox(
+          height: 10.h,
+        ),
+        ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: myContacts.length,
-          itemBuilder: (BuildContext context, int index) {
+          itemCount: myChats.length,
+          itemBuilder: (context, index) {
             return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ContactCard(
-                    avatar: myContacts[index].avatar,
-                    name: myContacts[index].contactName,
-                    uId: myContacts[index].uId));
+                child: ChatCard(
+                  name: myChats[index].name,
+                  avatar: myChats[index].avatar,
+                  dateTime: myChats[index].messages[myChats[index].messages.length-1].dateTime, lastMessage: myChats[index].messages[myChats[index].messages.length-1].message,
+                ));
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return Divider(
+              height: 5.h,
+              indent: 15.w,
+              endIndent: 15.w,
+            );
           },
         )
       ],

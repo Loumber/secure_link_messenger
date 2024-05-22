@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -75,11 +74,4 @@ class AuthenticationBloc
 
   void addAuthenticationRepository(
       AuthenticationRepository authenticationRepository) {}
-
-  Future<void> _checkAuthentication(
-    event,
-    emit,
-  ) async {
-    emit(AuthenticationInitial());
-  }
 }

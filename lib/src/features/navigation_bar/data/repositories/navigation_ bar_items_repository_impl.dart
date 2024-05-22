@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:secure_link_messenger/src/features/navigation_bar/domain/entities/navigation_bar_item_entity.dart';
 import 'package:secure_link_messenger/src/features/navigation_bar/domain/entities/rive_entity.dart';
 import 'package:secure_link_messenger/src/features/navigation_bar/domain/repositories/navigation_bar_items_repository.dart';
