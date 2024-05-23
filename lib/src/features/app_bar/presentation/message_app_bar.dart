@@ -10,21 +10,14 @@ class MessageAppBar extends StatefulWidget {
 class _MessageAppBarState extends State<MessageAppBar> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: () {},
-          child: const Icon(Icons.settings_ethernet_rounded),
-        ),
-        const Text(
+        Text(
           'Чаты',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        GestureDetector(
-          child: const Icon(Icons.create_outlined),
-          onTap: () {},
-        ),
+        
       ],
     );
   }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/features/messaging/domain/bloc/chat_provider.dart';
 import 'package:secure_link_messenger/src/features/messaging/presentation/widgets/chat_bubble.dart';
-import 'package:secure_link_messenger/src/pages/home_page.dart';
 
 class ChatScreen extends StatefulWidget {
   final File avatar;
@@ -55,10 +53,10 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: Consumer<ChatProvider>(
           builder: (context, chatProvider, child) {
-            return Column(
-              children: [
-                chatProvider.messages.isNotEmpty
-                    ? Expanded(
+            return chatProvider.messages.isNotEmpty
+                ? Column(
+                    children: [
+                      Expanded(
                         child: ListView.builder(
                           itemCount: chatProvider.messages.length,
                           itemBuilder: (context, index) {
@@ -74,54 +72,101 @@ class _ChatScreenState extends State<ChatScreen> {
                             }
                           },
                         ),
-                      )
-                    : const SizedBox(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CupertinoTextField(
-                          controller: _controller,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.w, horizontal: 8.h),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[350],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          placeholder: 'Сообщение',
-                          placeholderStyle: TextStyle(
-                            color: getColorFromHex("#6C6C6D"),
-                          ),
-                          style: TextStyle(
-                            color: getColorFromHex("#6C6C6D"),
-                          ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: CupertinoTextField(
+                                controller: _controller,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10.w, horizontal: 8.h),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[350],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                placeholder: 'Сообщение',
+                                placeholderStyle: TextStyle(
+                                  color: getColorFromHex("#6C6C6D"),
+                                ),
+                                style: TextStyle(
+                                  color: getColorFromHex("#6C6C6D"),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                const CircleAvatar(),
+                                CupertinoButton(
+                                  child: Icon(
+                                    Icons.send_rounded,
+                                    color: Colors.red[900],
+                                  ),
+                                  onPressed: () {
+                                    if (_controller.text.isNotEmpty) {
+                                      chatProvider
+                                          .sendMessage(_controller.text);
+                                      _controller.clear();
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(width: 8.w),
-                      Stack(
-                        alignment: Alignment.center,
+                    ],
+                  )
+                : Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
                         children: [
-                          const CircleAvatar(),
-                          CupertinoButton(
-                            child: Icon(
-                              Icons.send_rounded,
-                              color: Colors.red[900],
+                          Expanded(
+                            child: CupertinoTextField(
+                              controller: _controller,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.w, horizontal: 8.h),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[350],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              placeholder: 'Сообщение',
+                              placeholderStyle: TextStyle(
+                                color: getColorFromHex("#6C6C6D"),
+                              ),
+                              style: TextStyle(
+                                color: getColorFromHex("#6C6C6D"),
+                              ),
                             ),
-                            onPressed: () {
-                              if (_controller.text.isNotEmpty) {
-                                chatProvider.sendMessage(_controller.text);
-                                _controller.clear();
-                              }
-                            },
+                          ),
+                          SizedBox(width: 8.w),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              const CircleAvatar(),
+                              CupertinoButton(
+                                child: Icon(
+                                  Icons.send_rounded,
+                                  color: Colors.red[900],
+                                ),
+                                onPressed: () {
+                                  if (_controller.text.isNotEmpty) {
+                                    chatProvider.sendMessage(_controller.text);
+                                    _controller.clear();
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
                   ),
-                ),
-              ],
-            );
+                );
           },
         ),
       ),

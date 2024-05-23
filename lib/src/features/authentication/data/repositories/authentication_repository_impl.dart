@@ -5,6 +5,8 @@ import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:async';
+// ignore: depend_on_referenced_packages
+import 'package:path/path.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
@@ -29,6 +31,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return false;
     }
   }
+
+  File get avatar => _avatar;
 
   bool get isAuthorized => _firebaseAuth.currentUser != null;
 
@@ -66,7 +70,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
       await _currentUser.updateDisplayName(name);
       sendEmailVerification();
-      _imageURL = await dischargePhoto();
+      _imageURL = await dischargePhoto(_currentUser.uid);
 
       await _currentUser.updatePhotoURL(_imageURL);
 
@@ -89,11 +93,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<String> dischargePhoto() async {
+  Future<String> dischargePhoto(String name) async {
     try {
       firebase_storage.FirebaseStorage storage =
           firebase_storage.FirebaseStorage.instance;
-      firebase_storage.Reference ref = storage.ref().child(_avatar.path);
+      String fileName = basename(_avatar.path);
+      firebase_storage.Reference ref = storage.ref().child(name + fileName);
       await ref.putFile(_avatar);
 
       return await ref.getDownloadURL();

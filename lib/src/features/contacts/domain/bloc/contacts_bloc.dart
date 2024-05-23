@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/features/contacts/domain/entities/searched_user_entity.dart';
