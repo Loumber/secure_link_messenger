@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -28,9 +27,12 @@ class AuthenticationBloc
     });
 
     on<SignInLoadingDataEvent>((event, emit) async {
+      logger.d('Нупиздяо');
       emit(SignInLoading());
       try {
+        logger.d('Нупиздец');
         await MyLocator.userRepository.signIn(event.email, event.password);
+        logger.d('Засигинился');
         if (MyLocator.userRepository.isAuthorized) {
           emit(IsAuthentication());
         } else {
@@ -72,11 +74,4 @@ class AuthenticationBloc
 
   void addAuthenticationRepository(
       AuthenticationRepository authenticationRepository) {}
-
-  Future<void> _checkAuthentication(
-    event,
-    emit,
-  ) async {
-    emit(AuthenticationInitial());
-  }
 }

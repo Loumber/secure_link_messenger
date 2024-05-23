@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
-import 'package:secure_link_messenger/src/features/contacts/domain/entities/searched_user_entity.dart';
 import 'package:secure_link_messenger/src/features/contacts/presentation/widgets/searched_user.dart';
 
 class AddContactsPage extends StatelessWidget {

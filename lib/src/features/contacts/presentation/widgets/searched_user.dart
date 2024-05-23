@@ -42,10 +42,8 @@ class _SearchedUserState extends State<SearchedUser> {
         CircleAvatar(
           radius: 30.sp,
           child: ClipOval(
-            child: SizedBox(
-              height: 90.h,
-              width: 90.w,
-              child: Image.file(widget.avatar))),
+              child: SizedBox(
+                  height: 90.h, width: 90.w, child: Image.file(widget.avatar))),
         ),
         Text(
           widget.name,

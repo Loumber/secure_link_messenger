@@ -17,33 +17,33 @@ class VerifyEmailPage extends StatelessWidget {
             builder: (context, state) {
       switch (state) {
         case AuthenticationInitial _:
-          MyLoggr('AuthenticationInitial');
+          myLoggr('AuthenticationInitial');
           return const CupertinoActivityIndicator();
         case SignUpInitial _:
-          MyLoggr('SignUpInitial');
+          myLoggr('SignUpInitial');
           return const CupertinoActivityIndicator();
         case SignInInitial _:
-          MyLoggr('SignInInitial');
+          myLoggr('SignInInitial');
           return const Placeholder();
         case SignUpLoading _:
-          MyLoggr('SignUpLoading');
+          myLoggr('SignUpLoading');
           return const CupertinoActivityIndicator();
         case SignInLoading _:
-          MyLoggr('SignInLoading');
+          myLoggr('SignInLoading');
           return const Placeholder();
         case SignUpEmailVerify state:
-          MyLoggr('SignUpEmailVerify');
+          myLoggr('SignUpEmailVerify');
           return Padding(
             padding: EdgeInsets.fromLTRB(20.w, 90.h, 20.w, 0),
             child: VerifyEmail(email: state.email),
           );
         case IsAuthentication _:
-          MyLoggr('IsAuthentication');
+          myLoggr('IsAuthentication');
           Navigator.pushNamedAndRemoveUntil(
               context, AppRoutes.homeRoot, (route) => false);
           return const CupertinoActivityIndicator();
         case SignUpError _:
-          MyLoggr('SignUpError');
+          myLoggr('SignUpError');
           return const Placeholder();
         case SignInError():
           return const Placeholder();
@@ -51,7 +51,7 @@ class VerifyEmailPage extends StatelessWidget {
     })));
   }
 
-  void MyLoggr(String str) {
+  void myLoggr(String str) {
     var logger = Logger(
       printer: PrettyPrinter(),
     );

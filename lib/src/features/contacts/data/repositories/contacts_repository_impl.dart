@@ -24,17 +24,18 @@ class ContactsRepositoryImpl implements ContactsRepository {
     var querySnapshot = await _firebaseFirestore
         .collection('users')
         .where('name', isGreaterThanOrEqualTo: userName)
-        .where('name', isLessThan: userName + 'z')
+        .where('name', isLessThan: '${userName}z')
         .get();
     for (var doc in querySnapshot.docs) {
-      if(doc.id != _firebaseAuth.currentUser!.uid){
+      // if (doc.id != _firebaseAuth.currentUser!.uid) {
       var photo = await downloadPhoto(doc.data()['imageUrl']);
       var user = SearchedUserEntity(
         contactName: doc.data()['name'],
         avatar: photo,
         uId: doc.id,
       );
-      searchedUsers.add(user);}
+      searchedUsers.add(user);
+      //}
     }
     return searchedUsers;
   }
@@ -97,11 +98,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
         }
         return friendEntities;
       } else {
-        print('Текущий пользователь не найден в базе данных');
         return [];
       }
     } catch (e) {
-      print('Ошибка при получении списка друзей: $e');
       return [];
     }
   }
@@ -115,7 +114,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       await file.writeAsBytes(response.bodyBytes);
       return file;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

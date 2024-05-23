@@ -6,6 +6,7 @@ import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 import 'package:secure_link_messenger/src/pages/home_page.dart';
+
 import 'package:secure_link_messenger/src/pages/sign_up_page.dart';
 import 'package:secure_link_messenger/src/pages/sing_in_page.dart';
 import 'package:secure_link_messenger/src/pages/verify_email_page.dart';

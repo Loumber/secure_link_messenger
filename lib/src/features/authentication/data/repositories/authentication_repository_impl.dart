@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:async';
@@ -44,13 +45,13 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late String _imageURL;
 
   @override
-  Future<bool> checkUser(String email) {
-    // TODO: implement checkUser
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> signIn(String email, String password) async {
+    var logger = Logger(
+      printer: PrettyPrinter(),
+    );
+    logger.d(email);
+
+    logger.d(password);
     await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
   }
@@ -75,6 +76,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         'status': 'Soon',
         'imageUrl': _imageURL,
         'friends': [],
+        'chats': []
       });
     } on FirebaseAuthException catch (e) {
       // ignore: avoid_print
@@ -96,15 +98,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
       return await ref.getDownloadURL();
     } catch (e) {
-      print(e);
+      rethrow;
     }
-    return '';
   }
 
-  @override
-  Future<String> downloadPhotoUrl() {
-    // TODO: implement downloadPhotoUrl
-    throw UnimplementedError();
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;
   }
 
   @override
