@@ -42,6 +42,9 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+    var logger = Logger(
+      printer: PrettyPrinter(),
+    );
   }
 
   late User _currentUser;

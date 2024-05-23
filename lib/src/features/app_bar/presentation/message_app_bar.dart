@@ -17,7 +17,6 @@ class _MessageAppBarState extends State<MessageAppBar> {
           'Чаты',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        
       ],
     );
   }

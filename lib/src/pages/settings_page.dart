@@ -8,10 +8,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Column(children: [
-        Avatar(),
-        SignOutBotton()
-      ]),
+      child: Column(children: [Avatar(), SignOutBotton()]),
     );
   }
 }

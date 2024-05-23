@@ -121,10 +121,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     ],
                   )
                 : Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
                         children: [
                           Expanded(
                             child: CupertinoTextField(
@@ -165,8 +165,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ],
                       ),
-                  ),
-                );
+                    ),
+                  );
           },
         ),
       ),

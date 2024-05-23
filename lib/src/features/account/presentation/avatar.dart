@@ -32,12 +32,12 @@ class _AvatarState extends State<Avatar> {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           return SizedBox(
-            height: 420,
-            width: 420,
-            child: Image(
-              image: FileImage(snapshot.data!),
-              fit: BoxFit.cover,
-            ));
+              height: 420,
+              width: 420,
+              child: Image(
+                image: FileImage(snapshot.data!),
+                fit: BoxFit.cover,
+              ));
         } else {
           return const Text('No avatar found');
         }
