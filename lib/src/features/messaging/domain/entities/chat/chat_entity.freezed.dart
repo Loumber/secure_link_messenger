@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ChatEntity {
   String get name => throw _privateConstructorUsedError;
+  String get uid => throw _privateConstructorUsedError;
   File get avatar => throw _privateConstructorUsedError;
   List<MessageEntity> get messages => throw _privateConstructorUsedError;
 
@@ -31,7 +32,8 @@ abstract class $ChatEntityCopyWith<$Res> {
           ChatEntity value, $Res Function(ChatEntity) then) =
       _$ChatEntityCopyWithImpl<$Res, ChatEntity>;
   @useResult
-  $Res call({String name, File avatar, List<MessageEntity> messages});
+  $Res call(
+      {String name, String uid, File avatar, List<MessageEntity> messages});
 }
 
 /// @nodoc
@@ -48,6 +50,7 @@ class _$ChatEntityCopyWithImpl<$Res, $Val extends ChatEntity>
   @override
   $Res call({
     Object? name = null,
+    Object? uid = null,
     Object? avatar = null,
     Object? messages = null,
   }) {
@@ -55,6 +58,10 @@ class _$ChatEntityCopyWithImpl<$Res, $Val extends ChatEntity>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      uid: null == uid
+          ? _value.uid
+          : uid // ignore: cast_nullable_to_non_nullable
               as String,
       avatar: null == avatar
           ? _value.avatar
@@ -76,7 +83,8 @@ abstract class _$$ChatEntityImplCopyWith<$Res>
       __$$ChatEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, File avatar, List<MessageEntity> messages});
+  $Res call(
+      {String name, String uid, File avatar, List<MessageEntity> messages});
 }
 
 /// @nodoc
@@ -91,6 +99,7 @@ class __$$ChatEntityImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
+    Object? uid = null,
     Object? avatar = null,
     Object? messages = null,
   }) {
@@ -98,6 +107,10 @@ class __$$ChatEntityImplCopyWithImpl<$Res>
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      uid: null == uid
+          ? _value.uid
+          : uid // ignore: cast_nullable_to_non_nullable
               as String,
       avatar: null == avatar
           ? _value.avatar
@@ -116,12 +129,15 @@ class __$$ChatEntityImplCopyWithImpl<$Res>
 class _$ChatEntityImpl implements _ChatEntity {
   _$ChatEntityImpl(
       {required this.name,
+      required this.uid,
       required this.avatar,
       required final List<MessageEntity> messages})
       : _messages = messages;
 
   @override
   final String name;
+  @override
+  final String uid;
   @override
   final File avatar;
   final List<MessageEntity> _messages;
@@ -134,7 +150,7 @@ class _$ChatEntityImpl implements _ChatEntity {
 
   @override
   String toString() {
-    return 'ChatEntity(name: $name, avatar: $avatar, messages: $messages)';
+    return 'ChatEntity(name: $name, uid: $uid, avatar: $avatar, messages: $messages)';
   }
 
   @override
@@ -143,12 +159,13 @@ class _$ChatEntityImpl implements _ChatEntity {
         (other.runtimeType == runtimeType &&
             other is _$ChatEntityImpl &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             const DeepCollectionEquality().equals(other._messages, _messages));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, avatar,
+  int get hashCode => Object.hash(runtimeType, name, uid, avatar,
       const DeepCollectionEquality().hash(_messages));
 
   @JsonKey(ignore: true)
@@ -161,11 +178,14 @@ class _$ChatEntityImpl implements _ChatEntity {
 abstract class _ChatEntity implements ChatEntity {
   factory _ChatEntity(
       {required final String name,
+      required final String uid,
       required final File avatar,
       required final List<MessageEntity> messages}) = _$ChatEntityImpl;
 
   @override
   String get name;
+  @override
+  String get uid;
   @override
   File get avatar;
   @override

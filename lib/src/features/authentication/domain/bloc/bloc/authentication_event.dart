@@ -31,7 +31,6 @@ class SignInLoadingDataEvent extends AuthenticationEvent {
 
 class SignUpLoadedDataEvent extends AuthenticationEvent {
   final String email;
-
   SignUpLoadedDataEvent({required this.email});
 }
 

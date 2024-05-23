@@ -4,5 +4,10 @@ part 'message_entity.freezed.dart';
 
 @freezed
 abstract class MessageEntity with _$MessageEntity {
-   factory MessageEntity({required String message, required String dateTime,required String sender,required String recipient,}) = _MessageEntity;
+  factory MessageEntity({
+    required String message,
+    required String dateTime,
+    required String sender,
+    required String recipient,
+  }) = _MessageEntity;
 }

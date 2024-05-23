@@ -15,9 +15,9 @@ class ContactCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () =>
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return ChatScreen(avatar: avatar, name: name, uId: uId);
-      })),
+           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+    return ChatScreen(avatar: avatar, name: name, uId: uId);
+  })),
       child: Container(
         width: double.infinity,
         color: Colors.white,

@@ -21,9 +21,7 @@ class ChatProvider with ChangeNotifier {
         .orderBy('timestamp', descending: true)
         .snapshots()
         .listen((snapshot) {
-      _messages = snapshot.docs
-          .map((doc) => doc.data())
-          .toList();
+      _messages = snapshot.docs.map((doc) => doc.data()).toList();
       _messages = _messages.reversed.toList();
       notifyListeners();
     });

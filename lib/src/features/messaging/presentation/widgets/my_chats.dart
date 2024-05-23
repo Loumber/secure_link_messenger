@@ -51,9 +51,15 @@ class MyChats extends StatelessWidget {
             return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ChatCard(
+                  uid: myChats[index].uid,
                   name: myChats[index].name,
                   avatar: myChats[index].avatar,
-                  dateTime: myChats[index].messages[myChats[index].messages.length-1].dateTime, lastMessage: myChats[index].messages[myChats[index].messages.length-1].message,
+                  dateTime: myChats[index]
+                      .messages[myChats[index].messages.length - 1]
+                      .dateTime,
+                  lastMessage: myChats[index]
+                      .messages[myChats[index].messages.length - 1]
+                      .message,
                 ));
           },
           separatorBuilder: (BuildContext context, int index) {

@@ -43,14 +43,6 @@ class _ChatScreenState extends State<ChatScreen> {
       create: (_) => chatProvider,
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () async {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
-            },
-          ),
           title: Row(
             children: [
               CircleAvatar(

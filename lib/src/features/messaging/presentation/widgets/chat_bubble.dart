@@ -7,7 +7,8 @@ class ChatBubble extends StatelessWidget {
   final String time;
   final bool isMe;
 
-  const ChatBubble({super.key, 
+  const ChatBubble({
+    super.key,
     required this.text,
     required this.time,
     required this.isMe,
@@ -15,8 +16,7 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime timestamp =
-        DateTime.fromMillisecondsSinceEpoch(int.parse(time));
+    DateTime timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     DateTime now = DateTime.now();
     String formattedTime = '';
 

@@ -7,5 +7,9 @@ part 'chat_entity.freezed.dart';
 
 @freezed
 abstract class ChatEntity with _$ChatEntity {
-   factory ChatEntity({required String name, required File avatar, required List<MessageEntity> messages}) = _ChatEntity;
+  factory ChatEntity(
+      {required String name,
+      required String uid,
+      required File avatar,
+      required List<MessageEntity> messages}) = _ChatEntity;
 }
