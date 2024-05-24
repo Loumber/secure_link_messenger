@@ -25,7 +25,7 @@ class _ChangeAvatarButtonState extends State<ChangeAvatarButton> {
       width: 350.w,
       child: CupertinoButton(
           borderRadius: BorderRadius.vertical(top: Radius.circular(10.sp)),
-          color: Colors.grey[300],
+          color: Colors.grey[200],
           onPressed: () {
             showCupertinoModalPopup(
                 context: context,
