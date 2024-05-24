@@ -55,10 +55,10 @@ class MyChats extends StatelessWidget {
                   name: myChats[index].name,
                   avatar: myChats[index].avatar,
                   dateTime: myChats[index]
-                      .messages[myChats[index].messages.length - 1]
+                      .messages[0]
                       .dateTime,
                   lastMessage: myChats[index]
-                      .messages[myChats[index].messages.length - 1]
+                      .messages[0]
                       .message,
                 ));
           },

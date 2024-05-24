@@ -15,7 +15,7 @@ class SignOutBotton extends StatelessWidget {
       width: 350.w,
       child: CupertinoButton(
           borderRadius: BorderRadius.circular((0)),
-          color: Colors.grey[300],
+          color: Colors.grey[200],
           onPressed: () {
             BlocProvider.of<AuthenticationBloc>(context).add(SignOutEvent());
             var logger = Logger(

@@ -13,7 +13,7 @@ class RessetPasswordButton extends StatelessWidget {
       width: 350.w,
       child: CupertinoButton(
           borderRadius: BorderRadius.circular((0)),
-          color: Colors.grey[300],
+          color: Colors.grey[200],
           onPressed: () {
             BlocProvider.of<SettingsBloc>(context).add(GoRessetPasswordEvent());
           },

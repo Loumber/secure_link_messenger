@@ -7,6 +7,7 @@ class UserName extends StatefulWidget {
   const UserName({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _UserNameState createState() => _UserNameState();
 }
 
@@ -30,24 +31,21 @@ class _UserNameState extends State<UserName> {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           var logger = Logger(
-      printer: PrettyPrinter(),
-    );
-    logger.d(snapshot.data);
-          return 
-              Row(
-                children: [
-                  SizedBox(
-                    width: 15.w,
-                  ),
-                  Text(
-                    snapshot.data!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 30
-                    ),
-                  ),
-                ],
-              );
+            printer: PrettyPrinter(),
+          );
+          logger.d(snapshot.data);
+          return Row(
+            children: [
+              SizedBox(
+                width: 15.w,
+              ),
+              Text(
+                snapshot.data!,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w700, fontSize: 30),
+              ),
+            ],
+          );
         } else {
           return const Text('No user name found');
         }

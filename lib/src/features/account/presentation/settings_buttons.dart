@@ -17,7 +17,9 @@ class SettingsButtons extends StatelessWidget {
     return Center(
         child: Column(children: [
       const Avatar(),
-      SizedBox(height: 5.h,),
+      SizedBox(
+        height: 5.h,
+      ),
       const ChangeAvatarButton(),
       Container(
         color: Colors.grey[600],
