@@ -34,6 +34,8 @@ class SignUpLoadedDataEvent extends AuthenticationEvent {
   SignUpLoadedDataEvent({required this.email});
 }
 
+class DeleteAccountEvent extends AuthenticationEvent {}
+
 class SignOutEvent extends AuthenticationEvent {}
 
 class ErrorSignUp extends AuthenticationEvent {}

@@ -6,18 +6,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
 
-class SignOutBotton extends StatelessWidget {
-  const SignOutBotton({super.key});
+class DeleteAccount extends StatelessWidget {
+  const DeleteAccount({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 350.w,
       child: CupertinoButton(
-          borderRadius: BorderRadius.circular((0)),
-          color: Colors.grey[300],
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(10.sp)),
+          color: Colors.red[700],
           onPressed: () {
-            BlocProvider.of<AuthenticationBloc>(context).add(SignOutEvent());
+            BlocProvider.of<AuthenticationBloc>(context)
+                .add(DeleteAccountEvent());
             var logger = Logger(
               printer: PrettyPrinter(),
             );
@@ -27,8 +28,10 @@ class SignOutBotton extends StatelessWidget {
                 context, AppRoutes.signInRoot, (route) => false);
           },
           child: Text(
-            'Выйти',
-            style: TextStyle(fontSize: 18.sp, color: Colors.grey[600]),
+            'Удалить аккаунт',
+            style: TextStyle(
+              fontSize: 18.sp,
+            ),
           )),
     );
   }

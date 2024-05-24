@@ -42,9 +42,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    var logger = Logger(
-      printer: PrettyPrinter(),
-    );
   }
 
   late User _currentUser;
@@ -116,7 +113,44 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<void> deleteCurrentUser() async {
-    await _currentUser.delete();
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      throw Exception('User is not logged in');
+    }
+
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    final userSnapshot = await userDoc.get();
+
+    if (!userSnapshot.exists) {
+      throw Exception('User data not found in Firestore');
+    }
+
+    final userData = userSnapshot.data()!;
+    final avatarUrl = userData['imageUrl'] as String?;
+
+    if (avatarUrl != null && avatarUrl.isNotEmpty) {
+      try {
+        final firebase_storage.Reference ref =
+            firebase_storage.FirebaseStorage.instance.refFromURL(avatarUrl);
+        await ref.delete();
+      } catch (e) {
+        rethrow;
+      }
+    }
+
+    try {
+      await userDoc.delete();
+    } catch (e) {
+      rethrow;
+    }
+
+    try {
+      await currentUser.delete();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
@@ -124,5 +158,111 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     if (!_currentUser.emailVerified) {
       _currentUser.sendEmailVerification();
     }
+  }
+
+  @override
+  Future<void> updateUserName(String newName) async {
+    final currentUser = _firebaseAuth.currentUser;
+
+    if (currentUser == null) {
+      throw Exception('User is not logged in');
+    }
+
+    try {
+      await currentUser.updateDisplayName(newName);
+      final userDoc =
+          _firebaseFirestore.collection('users').doc(currentUser.uid);
+      await userDoc.update({'name': newName});
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateProfilePicture(File newAvatar) async {
+    final currentUser = _firebaseAuth.currentUser;
+
+    if (currentUser == null) {
+      throw Exception('User is not logged in');
+    }
+
+    final userDoc = _firebaseFirestore.collection('users').doc(currentUser.uid);
+    final userSnapshot = await userDoc.get();
+
+    if (!userSnapshot.exists) {
+      throw Exception('User data not found in Firestore');
+    }
+
+    final userData = userSnapshot.data()!;
+    final oldAvatarUrl = userData['imageUrl'] as String?;
+
+    if (oldAvatarUrl != null && oldAvatarUrl.isNotEmpty) {
+      try {
+        final firebase_storage.Reference oldRef =
+            firebase_storage.FirebaseStorage.instance.refFromURL(oldAvatarUrl);
+        await oldRef.delete();
+      } catch (e) {
+        throw Exception('Failed to delete old avatar: $e');
+      }
+    }
+
+    final newAvatarFileName = basename(newAvatar.path);
+    final firebase_storage.Reference newRef = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child(currentUser.uid)
+        .child(newAvatarFileName);
+    try {
+      await newRef.putFile(newAvatar);
+      final newAvatarUrl = await newRef.getDownloadURL();
+
+      await currentUser.updatePhotoURL(newAvatarUrl);
+
+      await userDoc.update({'imageUrl': newAvatarUrl});
+    } catch (e) {
+      throw Exception('Failed to upload new avatar: $e');
+    }
+  }
+
+  @override
+  Future<void> changePassword(
+      String currentPassword, String newPassword) async {
+    try {
+      final currentUser = _firebaseAuth.currentUser;
+
+      final credential = EmailAuthProvider.credential(
+        email: currentUser!.email!,
+        password: currentPassword,
+      );
+      await currentUser.reauthenticateWithCredential(credential);
+      await currentUser.updatePassword(newPassword);
+
+      Logger().d('Password changed successfully');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> getCurrentUserName() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      throw Exception('User is not logged in');
+    }
+
+    final userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+
+    final userData = userSnapshot.data();
+
+    if (userData == null || !userData.containsKey('name')) {
+      throw Exception('User data not found');
+    }
+
+    final String userName = userData['name'];
+    return userName;
   }
 }
