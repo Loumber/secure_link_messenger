@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/app_bar/presentation/contacts_app_bar.dart';
 import 'package:secure_link_messenger/src/features/app_bar/presentation/message_app_bar.dart';
+import 'package:secure_link_messenger/src/features/app_bar/presentation/settings_app_bar.dart';
 import 'package:secure_link_messenger/src/features/navigation_bar/data/providers/page_provider.dart';
 import 'package:secure_link_messenger/src/pages/contacts_page.dart';
 import 'package:secure_link_messenger/src/pages/message_page.dart';
@@ -35,13 +37,13 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
     logger.d('Homepage');
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
           title: ref.watch(pageProvider) == 0
               ? const ContactsAppBar()
               : ref.watch(pageProvider) == 1
                   ? const MessageAppBar()
-                  : null),
-      resizeToAvoidBottomInset: false,
+                  : const SettingsAppBar()),
       body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
         switch (state) {
@@ -50,10 +52,12 @@ class _HomePageState extends ConsumerState<HomePage> {
             return const Placeholder();
           case SignUpInitial():
             myLoggr('SignUpInitial');
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRoutes.signInRoot, (route) => false);
             return const Placeholder();
           case SignInInitial():
             myLoggr('SignInInitial');
-            return const Placeholder();
+            return const CupertinoActivityIndicator();
           case SignUpLoading():
             myLoggr('SignUpInitial');
             return const CupertinoActivityIndicator();

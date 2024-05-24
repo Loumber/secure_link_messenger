@@ -2,6 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/app/di.dart';
+import 'package:secure_link_messenger/src/features/account/domain/bloc/settings_bloc.dart';
 import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
@@ -28,11 +29,13 @@ class _MyAppState extends State<MyApp> {
     );
     final isAuthorized = userRepository.isAuthorized;
     logger.d(isAuthorized);
-    //userRepository.signOut();
     return MultiBlocProvider(
         providers: [
           BlocProvider<AuthenticationBloc>(
             create: (context) => AuthenticationBloc(),
+          ),
+          BlocProvider<SettingsBloc>(
+            create: (context) => SettingsBloc(),
           ),
           BlocProvider<ContactsBloc>(
             create: (context) => ContactsBloc(),

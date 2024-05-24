@@ -39,92 +39,92 @@ class _MessagePageState extends State<MessagePage> {
     );
     final currentUser = FirebaseAuth.instance.currentUser;
 
-    if (currentUser == null) {
-      throw Exception('User is not logged in');
-    }
-
-    final userSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
-    logger.d(userSnapshot.data());
-    final userData = userSnapshot.data();
-    if (userData == null || !userData.containsKey('chats')) {
-      return [];
-    }
-
-    final List<dynamic> chatIds = userData['chats'];
-    logger.d(chatIds);
-    List<ChatEntity> chats = [];
-
-    for (String chatId in chatIds) {
-      final messagesSnapshot = await FirebaseFirestore.instance
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .get();
-
-      List<MessageEntity> messages = messagesSnapshot.docs.map((doc) {
-        final msgData = doc.data();
-        DateTime now = DateTime.now();
-        DateTime timestamp = DateTime.fromMillisecondsSinceEpoch(
-            int.parse(msgData['timestamp']));
-        return MessageEntity(
-          message: msgData['message'],
-          dateTime: now.difference(timestamp).inDays == 0
-              ? DateFormat('HH:mm').format(timestamp)
-              : DateFormat('HH:mm dd.MM.yyyy').format(timestamp),
-          sender: msgData['sender'],
-          recipient: msgData['recipient'],
-        );
-      }).toList();
-
-      if (messages.isEmpty) {
-        continue; // Пропускаем чат, если нет сообщений
-      }
-
-      final latestMessage = messages.last;
-      final sender = latestMessage.sender;
-      final recipient = latestMessage.recipient;
-
-      String otherUserId;
-      if (sender == currentUser.uid) {
-        otherUserId = recipient;
-      } else {
-        otherUserId = sender;
-      }
-
-      final otherUserSnapshot = await FirebaseFirestore.instance
+    if (currentUser != null) {
+      final userSnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(otherUserId)
+          .doc(currentUser.uid)
           .get();
-      final otherUserData = otherUserSnapshot.data();
-
-      if (otherUserData == null) {
-        continue;
+      logger.d(userSnapshot.data());
+      final userData = userSnapshot.data();
+      if (userData == null || !userData.containsKey('chats')) {
+        return [];
       }
 
-      final String otherUserName = otherUserData['name'];
-      final String avatarUrl = otherUserData['imageUrl'];
+      final List<dynamic> chatIds = userData['chats'];
+      logger.d(chatIds);
+      List<ChatEntity> chats = [];
 
-      final directory = await getApplicationDocumentsDirectory();
-      final avatarPath = '${directory.path}/$otherUserId-avatar.jpg';
-      final avatarFile = File(avatarPath);
+      for (String chatId in chatIds) {
+        final messagesSnapshot = await FirebaseFirestore.instance
+            .collection('chats')
+            .doc(chatId)
+            .collection('messages')
+            .get();
 
-      if (!avatarFile.existsSync()) {
-        final response = await http.get(Uri.parse(avatarUrl));
-        avatarFile.writeAsBytesSync(response.bodyBytes);
+        List<MessageEntity> messages = messagesSnapshot.docs.map((doc) {
+          final msgData = doc.data();
+          DateTime now = DateTime.now();
+          DateTime timestamp = DateTime.fromMillisecondsSinceEpoch(
+              int.parse(msgData['timestamp']));
+          return MessageEntity(
+            message: msgData['message'],
+            dateTime: now.difference(timestamp).inDays == 0
+                ? DateFormat('HH:mm').format(timestamp)
+                : DateFormat('HH:mm dd.MM.yyyy').format(timestamp),
+            sender: msgData['sender'],
+            recipient: msgData['recipient'],
+          );
+        }).toList();
+
+        if (messages.isEmpty) {
+          continue; // Пропускаем чат, если нет сообщений
+        }
+
+        final latestMessage = messages.last;
+        final sender = latestMessage.sender;
+        final recipient = latestMessage.recipient;
+
+        String otherUserId;
+        if (sender == currentUser.uid) {
+          otherUserId = recipient;
+        } else {
+          otherUserId = sender;
+        }
+
+        final otherUserSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(otherUserId)
+            .get();
+        final otherUserData = otherUserSnapshot.data();
+
+        if (otherUserData == null) {
+          continue;
+        }
+
+        final String otherUserName = otherUserData['name'];
+        final String avatarUrl = otherUserData['imageUrl'];
+
+        final directory = await getApplicationDocumentsDirectory();
+        final avatarPath = '${directory.path}/$otherUserId-avatar.jpg';
+        final avatarFile = File(avatarPath);
+
+        if (!avatarFile.existsSync()) {
+          final response = await http.get(Uri.parse(avatarUrl));
+          avatarFile.writeAsBytesSync(response.bodyBytes);
+        }
+
+        chats.add(ChatEntity(
+          uid: otherUserId,
+          name: otherUserName,
+          avatar: avatarFile,
+          messages: messages,
+        ));
       }
 
-      chats.add(ChatEntity(
-        uid: otherUserId,
-        name: otherUserName,
-        avatar: avatarFile,
-        messages: messages,
-      ));
+      return chats;
     }
 
-    return chats;
+    return [];
   }
 
   @override

@@ -26,6 +26,18 @@ class AuthenticationBloc
       emit(SignUpInitial());
     });
 
+    on<SignOutEvent>((event, emit) async {
+      emit(SignInInitial());
+      await MyLocator.userRepository.signOut();
+      logger.d('SignInInitial после выхода');
+    });
+
+    on<DeleteAccountEvent>((event, emit) async {
+      emit(SignInInitial());
+      await MyLocator.userRepository.deleteCurrentUser();
+      logger.d('SignInInitial после выхода');
+    });
+
     on<SignInLoadingDataEvent>((event, emit) async {
       logger.d('Нупиздяо');
       emit(SignInLoading());
