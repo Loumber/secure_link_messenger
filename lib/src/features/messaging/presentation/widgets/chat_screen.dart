@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/features/messaging/domain/bloc/chat_provider.dart';
@@ -23,6 +24,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   late User user;
   late ChatProvider chatProvider;
 
@@ -31,8 +33,33 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     final authRepository = MyLocator.userRepository;
     user = authRepository.getCurrentUser()!;
+
     chatProvider = ChatProvider(user, widget.uId);
     chatProvider.getMessages();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
+
+    _controller.addListener(() {
+      if (_controller.text.isNotEmpty) {
+        _scrollToBottom();
+      }
+    });
+  }
+
+  void _scrollToBottom() {
+    var logger = Logger(
+      printer: PrettyPrinter(),
+    );
+    logger.d(_scrollController.hasClients);
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   @override
@@ -53,11 +80,21 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: Consumer<ChatProvider>(
           builder: (context, chatProvider, child) {
-            return chatProvider.messages.isNotEmpty
-                ? Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
+            if(chatProvider.messages.isNotEmpty){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _scrollToBottom();
+            });
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    reverse: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          controller: _scrollController,
+                          shrinkWrap: true,
                           itemCount: chatProvider.messages.length,
                           itemBuilder: (context, index) {
                             final message = chatProvider.messages[index];
@@ -72,103 +109,116 @@ class _ChatScreenState extends State<ChatScreen> {
                             }
                           },
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: CupertinoTextField(
-                                controller: _controller,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10.w, horizontal: 8.h),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[350],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                placeholder: 'Сообщение',
-                                placeholderStyle: TextStyle(
-                                  color: getColorFromHex("#6C6C6D"),
-                                ),
-                                style: TextStyle(
-                                  color: getColorFromHex("#6C6C6D"),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8.w),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                const CircleAvatar(),
-                                CupertinoButton(
-                                  child: Icon(
-                                    Icons.send_rounded,
-                                    color: Colors.red[900],
-                                  ),
-                                  onPressed: () {
-                                    if (_controller.text.isNotEmpty) {
-                                      chatProvider
-                                          .sendMessage(_controller.text);
-                                      _controller.clear();
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CupertinoTextField(
+                          controller: _controller,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.w, horizontal: 8.h),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[350],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          placeholder: 'Сообщение',
+                          placeholderStyle: TextStyle(
+                            color: getColorFromHex("#6C6C6D"),
+                          ),
+                          style: TextStyle(
+                            color: getColorFromHex("#6C6C6D"),
+                          ),
+                          onTap: () {
+                            _scrollToBottom();
+                          },
                         ),
                       ),
-                    ],
-                  )
-                : Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
+                      SizedBox(width: 8.w),
+                      Stack(
+                        alignment: Alignment.center,
                         children: [
-                          Expanded(
-                            child: CupertinoTextField(
-                              controller: _controller,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10.w, horizontal: 8.h),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[350],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              placeholder: 'Сообщение',
-                              placeholderStyle: TextStyle(
-                                color: getColorFromHex("#6C6C6D"),
-                              ),
-                              style: TextStyle(
-                                color: getColorFromHex("#6C6C6D"),
-                              ),
+                          const CircleAvatar(),
+                          CupertinoButton(
+                            child: Icon(
+                              Icons.send_rounded,
+                              color: Colors.red[900],
                             ),
-                          ),
-                          SizedBox(width: 8.w),
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              const CircleAvatar(),
-                              CupertinoButton(
-                                child: Icon(
-                                  Icons.send_rounded,
-                                  color: Colors.red[900],
-                                ),
-                                onPressed: () {
-                                  if (_controller.text.isNotEmpty) {
-                                    chatProvider.sendMessage(_controller.text);
-                                    _controller.clear();
-                                  }
-                                },
-                              ),
-                            ],
+                            onPressed: () {
+                              if (_controller.text.isNotEmpty) {
+                                chatProvider.sendMessage(_controller.text);
+                                _controller.clear();
+                                _scrollToBottom();
+                              }
+                            },
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                ),
+              ],
+            );}
+            else{
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                    padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CupertinoTextField(
+                            controller: _controller,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.w, horizontal: 8.h),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[350],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            placeholder: 'Сообщение',
+                            placeholderStyle: TextStyle(
+                              color: getColorFromHex("#6C6C6D"),
+                            ),
+                            style: TextStyle(
+                              color: getColorFromHex("#6C6C6D"),
+                            ),
+                            onTap: () {
+                              _scrollToBottom();
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            const CircleAvatar(),
+                            CupertinoButton(
+                              child: Icon(
+                                Icons.send_rounded,
+                                color: Colors.red[900],
+                              ),
+                              onPressed: () {
+                                if (_controller.text.isNotEmpty) {
+                                  chatProvider.sendMessage(_controller.text);
+                                  _controller.clear();
+                                  _scrollToBottom();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  );
+                  ),
+              );
+            }
           },
         ),
+        resizeToAvoidBottomInset: true,
       ),
     );
   }

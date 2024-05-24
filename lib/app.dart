@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -6,6 +8,9 @@ import 'package:secure_link_messenger/src/features/account/domain/bloc/settings_
 import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
+import 'package:secure_link_messenger/src/features/messaging/data/chat_repository_impl.dart';
+import 'package:secure_link_messenger/src/features/messaging/domain/bloc/bloc/chat_bloc.dart';
+import 'package:secure_link_messenger/src/features/messaging/domain/use_case/get_user_chats.dart';
 import 'package:secure_link_messenger/src/pages/home_page.dart';
 
 import 'package:secure_link_messenger/src/pages/sign_up_page.dart';
@@ -39,6 +44,14 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<ContactsBloc>(
             create: (context) => ContactsBloc(),
+          ),
+          BlocProvider(
+            create: (context) => ChatBloc(
+              GetUserChats(ChatRepositoryImpl(
+                FirebaseAuth.instance,
+                FirebaseFirestore.instance,
+              )),
+            ),
           ),
         ],
         child: ScreenUtilInit(
