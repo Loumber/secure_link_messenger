@@ -15,8 +15,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late File _avatar;
 
   var logger = Logger(
-      printer: PrettyPrinter(),
-    );
+    printer: PrettyPrinter(),
+  );
 
   AuthenticationRepositoryImpl(
     this._firebaseAuth,
@@ -41,11 +41,9 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   late User _currentUser;
   late String _imageURL;
-  
 
   late RSAPrivateKey _myRsaPrivateKey;
   late RSAPublicKey _myRsaPublicKey;
-  
 
   @override
   Future<void> signIn(String email, String password) async {
@@ -54,14 +52,16 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     );
     logger.d(email);
     logger.d(password);
-    await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
     await _retrievePrivateKey();
   }
 
   @override
   Future<void> signUp(String email, String password, String name) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
       _currentUser = FirebaseAuth.instance.currentUser!;
       await _currentUser.updateDisplayName(name);
       sendEmailVerification();
@@ -99,7 +99,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<String> dischargePhoto(String name) async {
     try {
-      firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
+      firebase_storage.FirebaseStorage storage =
+          firebase_storage.FirebaseStorage.instance;
       String fileName = basename(_avatar.path);
       firebase_storage.Reference ref = storage.ref().child(name + fileName);
       await ref.putFile(_avatar);
@@ -120,7 +121,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       throw Exception('User is not logged in');
     }
 
-    final userDoc = FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
     final userSnapshot = await userDoc.get();
     if (!userSnapshot.exists) {
       throw Exception('User data not found in Firestore');
@@ -130,7 +132,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     final avatarUrl = userData['imageUrl'] as String?;
     if (avatarUrl != null && avatarUrl.isNotEmpty) {
       try {
-        final firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.refFromURL(avatarUrl);
+        final firebase_storage.Reference ref =
+            firebase_storage.FirebaseStorage.instance.refFromURL(avatarUrl);
         await ref.delete();
       } catch (e) {
         rethrow;
@@ -166,7 +169,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
     try {
       await currentUser.updateDisplayName(newName);
-      final userDoc = _firebaseFirestore.collection('users').doc(currentUser.uid);
+      final userDoc =
+          _firebaseFirestore.collection('users').doc(currentUser.uid);
       await userDoc.update({'name': newName});
     } catch (e) {
       rethrow;
@@ -190,7 +194,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     final oldAvatarUrl = userData['imageUrl'] as String?;
     if (oldAvatarUrl != null && oldAvatarUrl.isNotEmpty) {
       try {
-        final firebase_storage.Reference oldRef = firebase_storage.FirebaseStorage.instance.refFromURL(oldAvatarUrl);
+        final firebase_storage.Reference oldRef =
+            firebase_storage.FirebaseStorage.instance.refFromURL(oldAvatarUrl);
         await oldRef.delete();
       } catch (e) {
         throw Exception('Failed to delete old avatar: $e');
@@ -198,7 +203,11 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
 
     final newAvatarFileName = basename(newAvatar.path);
-    final firebase_storage.Reference newRef = firebase_storage.FirebaseStorage.instance.ref().child(currentUser.uid).child(newAvatarFileName);
+    final firebase_storage.Reference newRef = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child(currentUser.uid)
+        .child(newAvatarFileName);
     try {
       await newRef.putFile(newAvatar);
       final newAvatarUrl = await newRef.getDownloadURL();
@@ -210,10 +219,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<void> changePassword(String currentPassword, String newPassword) async {
+  Future<void> changePassword(
+      String currentPassword, String newPassword) async {
     try {
       final currentUser = _firebaseAuth.currentUser;
-      final credential = EmailAuthProvider.credential(email: currentUser!.email!, password: currentPassword);
+      final credential = EmailAuthProvider.credential(
+          email: currentUser!.email!, password: currentPassword);
       await currentUser.reauthenticateWithCredential(credential);
       await currentUser.updatePassword(newPassword);
       Logger().d('Password changed successfully');
@@ -229,7 +240,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       throw Exception('User is not logged in');
     }
 
-    final userSnapshot = await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).get();
+    final userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
     final userData = userSnapshot.data();
     if (userData == null || !userData.containsKey('name')) {
       throw Exception('User data not found');
@@ -242,7 +256,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     if (currentUser == null) {
       throw Exception('User is not logged in');
     }
-    final userDoc = await _firebaseFirestore.collection('users').doc(currentUser.uid).get();
+    final userDoc =
+        await _firebaseFirestore.collection('users').doc(currentUser.uid).get();
     _myRsaPublicKey = RSAPublicKey.fromPEM(userDoc['publicKey']);
     _myRsaPrivateKey = RSAPrivateKey.fromPEM(userDoc['privateKey']);
     Logger().d('Private Key retrieved successfully');

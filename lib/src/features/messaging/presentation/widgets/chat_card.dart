@@ -56,6 +56,7 @@ class ChatCard extends StatelessWidget {
                   ),
                   SizedBox(height: 5.h),
                   Text(
+                    maxLines: 2,
                     lastMessage,
                     style: TextStyle(
                       fontSize: 14.sp,

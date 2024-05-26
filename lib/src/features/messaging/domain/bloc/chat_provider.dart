@@ -22,8 +22,14 @@ class ChatProvider with ChangeNotifier {
   bool get keysInitialized => _keysInitialized;
 
   Future<void> initializeKeys() async {
-    final currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-    final contactUserDoc = await FirebaseFirestore.instance.collection('users').doc(contactId).get();
+    final currentUserDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    final contactUserDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(contactId)
+        .get();
 
     if (currentUserDoc.exists && contactUserDoc.exists) {
       final privateKeyPem = currentUserDoc['privateKey'];
@@ -68,7 +74,7 @@ class ChatProvider with ChangeNotifier {
     final encryptedMessage = _encryptMessage(message);
     final messageData = {
       'message': encryptedMessage,
-      'originalMessage': message,  // Сохраняем оригинальное сообщение
+      'originalMessage': message, // Сохраняем оригинальное сообщение
       'sender': user.uid,
       'recipient': contactId,
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),

@@ -29,6 +29,8 @@ class ChatBubble extends StatelessWidget {
     return GestureDetector(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
+        padding:
+            isMe ? EdgeInsets.only(left: 50.w) : EdgeInsets.only(right: 50.w),
         child: Column(
           crossAxisAlignment:
               isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -36,11 +38,14 @@ class ChatBubble extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
               decoration: BoxDecoration(
-                color: isMe ? Colors.blue : Colors.black,
+                color: isMe ? Colors.red[900] : Colors.deepOrangeAccent,
                 borderRadius: BorderRadius.circular(20.0),
               ),
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.75,
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: isMe? CrossAxisAlignment.start:CrossAxisAlignment.end,
                 children: [
                   Text(
                     text,
@@ -61,12 +66,6 @@ class ChatBubble extends StatelessWidget {
                           fontSize: 12.sp,
                         ),
                       ),
-                      if (isMe)
-                        Icon(
-                          Icons.check,
-                          color: Colors.white70,
-                          size: 14.sp,
-                        ),
                     ],
                   ),
                 ],
