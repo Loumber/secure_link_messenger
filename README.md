@@ -12,27 +12,31 @@ Secure Link Messenger is a highly secure messaging application built with Flutte
 - **Cross-Platform**: Available on both Android and iOS.
 
 ## Screenshots
+- *SignIn Screen* | *SignUp Screen*
+<p float="left">
+  <img src="assets/screenshots/sign_in.png" width="300" />
+  <img src="assets/screenshots/sign_up_screen.png" width="300" />
+</p>
+   
 
-![Login Screen](assets/screenshots/sign_in.png)
-*Signin Screen*
+- *Chat List* | *Chat Screen*
+<p float="left">
+  <img src="assets/screenshots/chats_screen.png" width="300" />
+  <img src="assets/screenshots/message_screen.png" width="300" />
+</p>
 
-![Login Screen](assets/screenshots/sign_up_screen.png)
-*Signup Screen*
+- *Add To Contact* | *My Contacts*
+<p float="left">
+  <img src="assets/screenshots/adding_to_contacts.png" width="300" />
+  <img src="assets/screenshots/contacts_screen.png" width="300" />
+</p>
 
-![Chat List](assets/screenshots/chats_screen.png)
-*Chat List*
+- *User Screen*
+<p float="left">
+ <img src="assets/screenshots/edit_scrren.png" width="300" />
+</p> 
 
-![Chat Screen](assets/screenshots/message_screen.png)
-*Chat Screen*
 
-![Chat Screen](assets/screenshots/adding_to_contacts.png)
-*Add To Contact*
-
-![Chat Screen](assets/screenshots/contacts_screen.png)
-*My Contacts*
-
-![Chat Screen](assets/screenshots/edit_scrren.png)
-*User Screen*
 
 ## Technology Stack
 
