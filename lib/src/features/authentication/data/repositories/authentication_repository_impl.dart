@@ -7,13 +7,16 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:async';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
+import 'package:crypton/crypton.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
-
   final FirebaseFirestore _firebaseFirestore;
-
   late File _avatar;
+
+  var logger = Logger(
+    printer: PrettyPrinter(),
+  );
 
   AuthenticationRepositoryImpl(
     this._firebaseAuth,
@@ -22,22 +25,14 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   bool get isEmailVerification {
     if (isAuthorized) {
-      if (_firebaseAuth.currentUser!.emailVerified) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
+      return _firebaseAuth.currentUser!.emailVerified;
     }
+    return false;
   }
 
   File get avatar => _avatar;
-
   bool get isAuthorized => _firebaseAuth.currentUser != null;
-
   User? get user => _firebaseAuth.currentUser;
-
   Stream<User?> get userStream => _firebaseAuth.userChanges();
 
   Future<void> signOut() async {
@@ -45,8 +40,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   late User _currentUser;
-
   late String _imageURL;
+
+  late RSAPrivateKey _myRsaPrivateKey;
+  late RSAPublicKey _myRsaPublicKey;
 
   @override
   Future<void> signIn(String email, String password) async {
@@ -54,10 +51,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       printer: PrettyPrinter(),
     );
     logger.d(email);
-
     logger.d(password);
     await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
+    await _retrievePrivateKey();
   }
 
   @override
@@ -65,14 +62,19 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-
       _currentUser = FirebaseAuth.instance.currentUser!;
-
       await _currentUser.updateDisplayName(name);
       sendEmailVerification();
       _imageURL = await dischargePhoto(_currentUser.uid);
-
       await _currentUser.updatePhotoURL(_imageURL);
+
+      // Generate RSA keypair
+      var myRsaKeypair = RSAKeypair.fromRandom();
+
+      logger.d(myRsaKeypair.publicKey);
+      logger.d(myRsaKeypair.privateKey);
+      var myRsaPublicKeyString = myRsaKeypair.publicKey.toPEM();
+      var myRsaPrivateKeyString = myRsaKeypair.privateKey.toPEM();
 
       await _firebaseFirestore.collection('users').doc(_currentUser.uid).set({
         'name': name,
@@ -80,7 +82,9 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         'status': 'Soon',
         'imageUrl': _imageURL,
         'friends': [],
-        'chats': []
+        'chats': [],
+        'publicKey': myRsaPublicKeyString,
+        'privateKey': myRsaPrivateKeyString,
       });
     } on FirebaseAuthException catch (e) {
       // ignore: avoid_print
@@ -100,7 +104,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       String fileName = basename(_avatar.path);
       firebase_storage.Reference ref = storage.ref().child(name + fileName);
       await ref.putFile(_avatar);
-
       return await ref.getDownloadURL();
     } catch (e) {
       rethrow;
@@ -114,7 +117,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<void> deleteCurrentUser() async {
     final currentUser = FirebaseAuth.instance.currentUser;
-
     if (currentUser == null) {
       throw Exception('User is not logged in');
     }
@@ -122,14 +124,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     final userDoc =
         FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
     final userSnapshot = await userDoc.get();
-
     if (!userSnapshot.exists) {
       throw Exception('User data not found in Firestore');
     }
 
     final userData = userSnapshot.data()!;
     final avatarUrl = userData['imageUrl'] as String?;
-
     if (avatarUrl != null && avatarUrl.isNotEmpty) {
       try {
         final firebase_storage.Reference ref =
@@ -163,7 +163,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<void> updateUserName(String newName) async {
     final currentUser = _firebaseAuth.currentUser;
-
     if (currentUser == null) {
       throw Exception('User is not logged in');
     }
@@ -181,21 +180,18 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<void> updateProfilePicture(File newAvatar) async {
     final currentUser = _firebaseAuth.currentUser;
-
     if (currentUser == null) {
       throw Exception('User is not logged in');
     }
 
     final userDoc = _firebaseFirestore.collection('users').doc(currentUser.uid);
     final userSnapshot = await userDoc.get();
-
     if (!userSnapshot.exists) {
       throw Exception('User data not found in Firestore');
     }
 
     final userData = userSnapshot.data()!;
     final oldAvatarUrl = userData['imageUrl'] as String?;
-
     if (oldAvatarUrl != null && oldAvatarUrl.isNotEmpty) {
       try {
         final firebase_storage.Reference oldRef =
@@ -215,9 +211,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     try {
       await newRef.putFile(newAvatar);
       final newAvatarUrl = await newRef.getDownloadURL();
-
       await currentUser.updatePhotoURL(newAvatarUrl);
-
       await userDoc.update({'imageUrl': newAvatarUrl});
     } catch (e) {
       throw Exception('Failed to upload new avatar: $e');
@@ -229,14 +223,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       String currentPassword, String newPassword) async {
     try {
       final currentUser = _firebaseAuth.currentUser;
-
       final credential = EmailAuthProvider.credential(
-        email: currentUser!.email!,
-        password: currentPassword,
-      );
+          email: currentUser!.email!, password: currentPassword);
       await currentUser.reauthenticateWithCredential(credential);
       await currentUser.updatePassword(newPassword);
-
       Logger().d('Password changed successfully');
     } catch (e) {
       rethrow;
@@ -246,7 +236,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<String> getCurrentUserName() async {
     final currentUser = FirebaseAuth.instance.currentUser;
-
     if (currentUser == null) {
       throw Exception('User is not logged in');
     }
@@ -255,14 +244,22 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         .collection('users')
         .doc(currentUser.uid)
         .get();
-
     final userData = userSnapshot.data();
-
     if (userData == null || !userData.containsKey('name')) {
       throw Exception('User data not found');
     }
+    return userData['name'] as String;
+  }
 
-    final String userName = userData['name'];
-    return userName;
+  Future<void> _retrievePrivateKey() async {
+    final currentUser = _firebaseAuth.currentUser;
+    if (currentUser == null) {
+      throw Exception('User is not logged in');
+    }
+    final userDoc =
+        await _firebaseFirestore.collection('users').doc(currentUser.uid).get();
+    _myRsaPublicKey = RSAPublicKey.fromPEM(userDoc['publicKey']);
+    _myRsaPrivateKey = RSAPrivateKey.fromPEM(userDoc['privateKey']);
+    Logger().d('Private Key retrieved successfully');
   }
 }

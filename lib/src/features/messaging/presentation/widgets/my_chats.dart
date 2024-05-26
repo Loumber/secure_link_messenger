@@ -54,12 +54,8 @@ class MyChats extends StatelessWidget {
                   uid: myChats[index].uid,
                   name: myChats[index].name,
                   avatar: myChats[index].avatar,
-                  dateTime: myChats[index]
-                      .messages[0]
-                      .dateTime,
-                  lastMessage: myChats[index]
-                      .messages[0]
-                      .message,
+                  dateTime: myChats[index].messages[0].dateTime,
+                  lastMessage: myChats[index].messages[0].message,
                 ));
           },
           separatorBuilder: (BuildContext context, int index) {

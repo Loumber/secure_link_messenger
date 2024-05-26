@@ -35,11 +35,6 @@ class _ChatScreenState extends State<ChatScreen> {
     user = authRepository.getCurrentUser()!;
 
     chatProvider = ChatProvider(user, widget.uId);
-    chatProvider.getMessages();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToBottom();
-    });
 
     _controller.addListener(() {
       if (_controller.text.isNotEmpty) {
@@ -80,93 +75,44 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: Consumer<ChatProvider>(
           builder: (context, chatProvider, child) {
-            if(chatProvider.messages.isNotEmpty){
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _scrollToBottom();
-            });
-            return Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    reverse: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          itemCount: chatProvider.messages.length,
-                          itemBuilder: (context, index) {
-                            final message = chatProvider.messages[index];
-                            if (message['message'] != null) {
-                              return ChatBubble(
-                                text: message['message'],
-                                time: message['timestamp'] ?? '',
-                                isMe: message['sender'] == user.uid,
-                              );
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CupertinoTextField(
-                          controller: _controller,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.w, horizontal: 8.h),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[350],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          placeholder: 'Сообщение',
-                          placeholderStyle: TextStyle(
-                            color: getColorFromHex("#6C6C6D"),
-                          ),
-                          style: TextStyle(
-                            color: getColorFromHex("#6C6C6D"),
-                          ),
-                          onTap: () {
-                            _scrollToBottom();
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      Stack(
-                        alignment: Alignment.center,
+            if (!chatProvider.keysInitialized) {
+              return const Center(child: CupertinoActivityIndicator());
+            }
+
+            if (chatProvider.messages.isNotEmpty) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _scrollToBottom();
+              });
+              return Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      reverse: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
                         children: [
-                          const CircleAvatar(),
-                          CupertinoButton(
-                            child: Icon(
-                              Icons.send_rounded,
-                              color: Colors.red[900],
-                            ),
-                            onPressed: () {
-                              if (_controller.text.isNotEmpty) {
-                                chatProvider.sendMessage(_controller.text);
-                                _controller.clear();
-                                _scrollToBottom();
+                          ListView.builder(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            itemCount: chatProvider.messages.length,
+                            itemBuilder: (context, index) {
+                              final message = chatProvider.messages[index];
+                              if (message['message'] != null) {
+                                return ChatBubble(
+                                  text: message['message'],
+                                  time: message['timestamp'] ?? '',
+                                  isMe: message['sender'] == user.uid,
+                                );
+                              } else {
+                                return const SizedBox.shrink();
                               }
                             },
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
-            );}
-            else{
-              return Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
                     child: Row(
                       children: [
@@ -214,6 +160,59 @@ class _ChatScreenState extends State<ChatScreen> {
                       ],
                     ),
                   ),
+                ],
+              );
+            } else {
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10.w, 0, 0, 0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CupertinoTextField(
+                          controller: _controller,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.w, horizontal: 8.h),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[350],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          placeholder: 'Сообщение',
+                          placeholderStyle: TextStyle(
+                            color: getColorFromHex("#6C6C6D"),
+                          ),
+                          style: TextStyle(
+                            color: getColorFromHex("#6C6C6D"),
+                          ),
+                          onTap: () {
+                            _scrollToBottom();
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const CircleAvatar(),
+                          CupertinoButton(
+                            child: Icon(
+                              Icons.send_rounded,
+                              color: Colors.red[900],
+                            ),
+                            onPressed: () {
+                              if (_controller.text.isNotEmpty) {
+                                chatProvider.sendMessage(_controller.text);
+                                _controller.clear();
+                                _scrollToBottom();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               );
             }
           },

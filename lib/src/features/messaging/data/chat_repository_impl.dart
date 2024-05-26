@@ -6,6 +6,7 @@ import 'package:secure_link_messenger/src/features/messaging/domain/entities/cha
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:secure_link_messenger/src/features/messaging/domain/entities/message/message_entity.dart';
+import 'package:crypton/crypton.dart';
 
 abstract class ChatRepository {
   Stream<List<ChatEntity>> getUserChats();
@@ -15,7 +16,25 @@ class ChatRepositoryImpl implements ChatRepository {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
 
-  ChatRepositoryImpl(this._firebaseAuth, this._firebaseFirestore);
+  late RSAPrivateKey _myPrivateKey;
+  bool _keysInitialized = false;
+
+  ChatRepositoryImpl(this._firebaseAuth, this._firebaseFirestore) {
+    _initializeKeys();
+  }
+
+  Future<void> _initializeKeys() async {
+    final currentUser = _firebaseAuth.currentUser;
+    if (currentUser == null) return;
+
+    final currentUserDoc =
+        await _firebaseFirestore.collection('users').doc(currentUser.uid).get();
+    if (currentUserDoc.exists) {
+      final privateKeyPem = currentUserDoc['privateKey'];
+      _myPrivateKey = RSAPrivateKey.fromPEM(privateKeyPem);
+      _keysInitialized = true;
+    }
+  }
 
   @override
   Stream<List<ChatEntity>> getUserChats() {
@@ -25,10 +44,8 @@ class ChatRepositoryImpl implements ChatRepository {
       return Stream.value([]);
     }
 
-    final userDocStream = _firebaseFirestore
-        .collection('users')
-        .doc(currentUser.uid)
-        .snapshots();
+    final userDocStream =
+        _firebaseFirestore.collection('users').doc(currentUser.uid).snapshots();
 
     return userDocStream.asyncMap((userSnapshot) async {
       final userData = userSnapshot.data();
@@ -50,11 +67,23 @@ class ChatRepositoryImpl implements ChatRepository {
         List<MessageEntity> messages = messagesSnapshot.docs.map((doc) {
           final msgData = doc.data();
           DateTime now = DateTime.now();
-          
+
           DateTime messageTime = DateTime.fromMillisecondsSinceEpoch(
               int.parse(msgData['timestamp']));
+
+          // Определение сообщения в зависимости от отправителя
+          String message;
+          if (msgData['sender'] == currentUser.uid) {
+            message = msgData['originalMessage'];
+          } else if (_keysInitialized &&
+              msgData['recipient'] == currentUser.uid) {
+            message = _decryptMessage(msgData['message']);
+          } else {
+            message = msgData['message'];
+          }
+
           return MessageEntity(
-            message: msgData['message'],
+            message: message,
             dateTime: now.difference(messageTime).inDays == 0
                 ? DateFormat('HH:mm').format(messageTime)
                 : DateFormat('HH:mm dd.MM.yyyy').format(messageTime),
@@ -77,10 +106,8 @@ class ChatRepositoryImpl implements ChatRepository {
           otherUserId = sender;
         }
 
-        final otherUserSnapshot = await _firebaseFirestore
-            .collection('users')
-            .doc(otherUserId)
-            .get();
+        final otherUserSnapshot =
+            await _firebaseFirestore.collection('users').doc(otherUserId).get();
         final otherUserData = otherUserSnapshot.data();
 
         if (otherUserData == null) {
@@ -107,9 +134,14 @@ class ChatRepositoryImpl implements ChatRepository {
         ));
       }
 
-      chats.sort((a, b) => b.messages.first.dateTime.compareTo(a.messages.first.dateTime));
+      chats.sort((a, b) =>
+          b.messages.first.dateTime.compareTo(a.messages.first.dateTime));
 
       return chats;
     });
+  }
+
+  String _decryptMessage(String encryptedMessage) {
+    return _myPrivateKey.decrypt(encryptedMessage);
   }
 }
