@@ -42,8 +42,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late User _currentUser;
   late String _imageURL;
 
-  
-
   @override
   Future<void> signIn(String email, String password) async {
     var logger = Logger(
@@ -53,7 +51,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     logger.d(password);
     await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    
   }
 
   @override
@@ -249,6 +246,4 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
     return userData['name'] as String;
   }
-
-  
 }

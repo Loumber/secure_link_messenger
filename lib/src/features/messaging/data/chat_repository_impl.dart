@@ -36,6 +36,17 @@ class ChatRepositoryImpl implements ChatRepository {
     }
   }
 
+  List<ChatEntity> searchMessages(String userName, List<ChatEntity> messages) {
+    List<ChatEntity> result = [];
+    for (var element in messages) {
+      var elementLower = element.name.toLowerCase();
+      if (elementLower.contains(userName.toLowerCase())) {
+        result.add(element);
+      }
+    }
+    return result;
+  }
+
   @override
   Stream<List<ChatEntity>> getUserChats() {
     final currentUser = _firebaseAuth.currentUser;
@@ -67,7 +78,6 @@ class ChatRepositoryImpl implements ChatRepository {
         List<MessageEntity> messages = messagesSnapshot.docs.map((doc) {
           final msgData = doc.data();
           DateTime now = DateTime.now();
-
           DateTime messageTime = DateTime.fromMillisecondsSinceEpoch(
               int.parse(msgData['timestamp']));
           String message;

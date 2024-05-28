@@ -10,11 +10,11 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
   FriendsBloc() : super(InitialFriends()) {
     on<SearchFriendEvent>((event, emit) async {
       emit(SearchFriends());
-      var contacts =
-          await MyLocator.contactsRepository.searchContacts(event.nameUser,event.friends);
+      var contacts = await MyLocator.contactsRepository
+          .searchContacts(event.nameUser, event.friends);
       emit(SearchedFriends(contacts));
     });
-    on<MyFriendEvent>((event,emit){
+    on<MyFriendEvent>((event, emit) {
       emit(InitialFriends());
     });
   }

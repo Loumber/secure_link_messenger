@@ -20,11 +20,12 @@ class MyContacts extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(15.w, 0, 5.w, 0),
           child: CupertinoTextField(
             onChanged: (value) {
-              if(value.isNotEmpty){BlocProvider.of<FriendsBloc>(context)
-                  .add(SearchFriendEvent(nameUser: value,myContacts));}else{
-                    BlocProvider.of<FriendsBloc>(context)
-                  .add(MyFriendEvent());
-                  }
+              if (value.isNotEmpty) {
+                BlocProvider.of<FriendsBloc>(context)
+                    .add(SearchFriendEvent(nameUser: value, myContacts));
+              } else {
+                BlocProvider.of<FriendsBloc>(context).add(MyFriendEvent());
+              }
             },
             padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 8.h),
             decoration: BoxDecoration(
@@ -93,8 +94,8 @@ class MyContacts extends StatelessWidget {
                 );
               case SearchFriends():
                 return Padding(
-                  padding:  EdgeInsets.fromLTRB(15.w,220.h,15.w,0),
-                  child: const  CupertinoActivityIndicator(),
+                  padding: EdgeInsets.fromLTRB(15.w, 220.h, 15.w, 0),
+                  child: const CupertinoActivityIndicator(),
                 );
               case SearchedFriends():
                 return Padding(

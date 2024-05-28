@@ -19,6 +19,8 @@ import 'package:secure_link_messenger/src/pages/sing_in_page.dart';
 import 'package:secure_link_messenger/src/pages/verify_email_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'src/features/messaging/domain/bloc/bloc/search_bloc.dart';
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -46,8 +48,12 @@ class _MyAppState extends State<MyApp> {
           BlocProvider<ContactsBloc>(
             create: (context) => ContactsBloc(),
           ),
-          BlocProvider<FriendsBloc>(
-            create: (context)=> FriendsBloc()),
+          BlocProvider<FriendsBloc>(create: (context) => FriendsBloc()),
+          BlocProvider<SearchBloc>(
+              create: (context) => SearchBloc(GetUserChats(ChatRepositoryImpl(
+                    FirebaseAuth.instance,
+                    FirebaseFirestore.instance,
+                  )))),
           BlocProvider(
             create: (context) => ChatBloc(
               GetUserChats(ChatRepositoryImpl(

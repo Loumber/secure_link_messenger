@@ -14,7 +14,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
   late Map<String, dynamic> userMap;
   ContactsRepositoryImpl(this._firebaseFirestore, this._firebaseAuth);
 
-  Future<List<SearchedUserEntity>> searchContacts(String userName, List<SearchedUserEntity> friends) async {
+  Future<List<SearchedUserEntity>> searchContacts(
+      String userName, List<SearchedUserEntity> friends) async {
     var logger = Logger(
       printer: PrettyPrinter(),
     );
