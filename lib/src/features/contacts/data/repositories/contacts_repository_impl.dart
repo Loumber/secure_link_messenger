@@ -14,6 +14,21 @@ class ContactsRepositoryImpl implements ContactsRepository {
   late Map<String, dynamic> userMap;
   ContactsRepositoryImpl(this._firebaseFirestore, this._firebaseAuth);
 
+  Future<List<SearchedUserEntity>> searchContacts(String userName, List<SearchedUserEntity> friends) async {
+    var logger = Logger(
+      printer: PrettyPrinter(),
+    );
+    logger.d(friends);
+    List<SearchedUserEntity> result = [];
+    for (var element in friends) {
+      var elementLower = element.contactName.toLowerCase();
+      if (elementLower.contains(userName.toLowerCase())) {
+        result.add(element);
+      }
+    }
+    return result;
+  }
+
   @override
   Future<List<SearchedUserEntity>> searchUser(String userName) async {
     var logger = Logger(
@@ -27,15 +42,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
         .where('name', isLessThan: '${userName}z')
         .get();
     for (var doc in querySnapshot.docs) {
-      // if (doc.id != _firebaseAuth.currentUser!.uid) {
-      var photo = await downloadPhoto(doc.data()['imageUrl']);
-      var user = SearchedUserEntity(
-        contactName: doc.data()['name'],
-        avatar: photo,
-        uId: doc.id,
-      );
-      searchedUsers.add(user);
-      //}
+      if (doc.id != _firebaseAuth.currentUser!.uid) {
+        var photo = await downloadPhoto(doc.data()['imageUrl']);
+        var user = SearchedUserEntity(
+          contactName: doc.data()['name'],
+          avatar: photo,
+          uId: doc.id,
+        );
+        searchedUsers.add(user);
+      }
     }
     return searchedUsers;
   }

@@ -70,16 +70,14 @@ class ChatRepositoryImpl implements ChatRepository {
 
           DateTime messageTime = DateTime.fromMillisecondsSinceEpoch(
               int.parse(msgData['timestamp']));
-
-          // Определение сообщения в зависимости от отправителя
           String message;
           if (msgData['sender'] == currentUser.uid) {
-            message = msgData['originalMessage'];
+            message = _decryptMessage(msgData['messageForSender']);
           } else if (_keysInitialized &&
               msgData['recipient'] == currentUser.uid) {
-            message = _decryptMessage(msgData['message']);
+            message = _decryptMessage(msgData['messageForRecipient']);
           } else {
-            message = msgData['message'];
+            message = msgData['messageForRecipient'];
           }
 
           return MessageEntity(

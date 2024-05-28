@@ -45,7 +45,8 @@ class ChatBubble extends StatelessWidget {
                 maxWidth: MediaQuery.of(context).size.width * 0.75,
               ),
               child: Column(
-                crossAxisAlignment: isMe? CrossAxisAlignment.start:CrossAxisAlignment.end,
+                crossAxisAlignment:
+                    isMe ? CrossAxisAlignment.start : CrossAxisAlignment.end,
                 children: [
                   Text(
                     text,

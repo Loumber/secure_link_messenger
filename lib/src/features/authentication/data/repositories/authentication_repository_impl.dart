@@ -42,8 +42,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late User _currentUser;
   late String _imageURL;
 
-  late RSAPrivateKey _myRsaPrivateKey;
-  late RSAPublicKey _myRsaPublicKey;
+  
 
   @override
   Future<void> signIn(String email, String password) async {
@@ -54,7 +53,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     logger.d(password);
     await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    await _retrievePrivateKey();
+    
   }
 
   @override
@@ -251,15 +250,5 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     return userData['name'] as String;
   }
 
-  Future<void> _retrievePrivateKey() async {
-    final currentUser = _firebaseAuth.currentUser;
-    if (currentUser == null) {
-      throw Exception('User is not logged in');
-    }
-    final userDoc =
-        await _firebaseFirestore.collection('users').doc(currentUser.uid).get();
-    _myRsaPublicKey = RSAPublicKey.fromPEM(userDoc['publicKey']);
-    _myRsaPrivateKey = RSAPrivateKey.fromPEM(userDoc['privateKey']);
-    Logger().d('Private Key retrieved successfully');
-  }
+  
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/features/account/domain/bloc/settings_bloc.dart';
+import 'package:secure_link_messenger/src/features/contacts/domain/bloc/bloc/friends_bloc.dart';
 import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
@@ -45,6 +46,8 @@ class _MyAppState extends State<MyApp> {
           BlocProvider<ContactsBloc>(
             create: (context) => ContactsBloc(),
           ),
+          BlocProvider<FriendsBloc>(
+            create: (context)=> FriendsBloc()),
           BlocProvider(
             create: (context) => ChatBloc(
               GetUserChats(ChatRepositoryImpl(
