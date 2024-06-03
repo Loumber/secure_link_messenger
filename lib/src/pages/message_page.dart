@@ -5,9 +5,10 @@ import 'package:secure_link_messenger/src/features/messaging/domain/bloc/bloc/ch
 import 'package:secure_link_messenger/src/features/messaging/presentation/widgets/my_chats.dart';
 
 class MessagePage extends StatefulWidget {
-  const MessagePage({Key? key}) : super(key: key);
+  const MessagePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MessagePageState createState() => _MessagePageState();
 }
 

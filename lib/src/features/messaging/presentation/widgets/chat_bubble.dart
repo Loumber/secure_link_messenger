@@ -38,14 +38,15 @@ class ChatBubble extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
               decoration: BoxDecoration(
-                color: isMe ? Colors.red[900] : Colors.deepOrangeAccent,
+                color: isMe ? Colors.redAccent : Colors.deepOrangeAccent,
                 borderRadius: BorderRadius.circular(20.0),
               ),
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.75,
               ),
               child: Column(
-                crossAxisAlignment: isMe? CrossAxisAlignment.start:CrossAxisAlignment.end,
+                crossAxisAlignment:
+                    isMe ? CrossAxisAlignment.start : CrossAxisAlignment.end,
                 children: [
                   Text(
                     text,

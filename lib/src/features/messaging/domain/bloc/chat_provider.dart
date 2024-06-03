@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:crypton/crypton.dart';
@@ -9,6 +13,7 @@ class ChatProvider with ChangeNotifier {
   List<Map<String, dynamic>> _messages = [];
   late RSAPrivateKey _myPrivateKey;
   late RSAPublicKey _contactPublicKey;
+  late RSAPublicKey _myPublicKey;
   bool _keysInitialized = false;
 
   ChatProvider(this.user, this.contactId) {
@@ -16,6 +21,16 @@ class ChatProvider with ChangeNotifier {
       _keysInitialized = true;
       getMessages();
     });
+  }
+
+  String decryptString(String encryptedKey, String keyString, encrypt.IV iv) {
+    final key =
+        encrypt.Key.fromUtf8(keyString.padRight(32, '\0').substring(0, 32));
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    final encrypted = encrypt.Encrypted.fromBase64(encryptedKey);
+
+    final dencrypted = encrypter.decrypt(encrypted, iv: iv);
+    return dencrypted;
   }
 
   List<Map<String, dynamic>> get messages => _messages;
@@ -32,11 +47,17 @@ class ChatProvider with ChangeNotifier {
         .get();
 
     if (currentUserDoc.exists && contactUserDoc.exists) {
-      final privateKeyPem = currentUserDoc['privateKey'];
-      final publicKeyPem = contactUserDoc['publicKey'];
+      final privateKeyPem = decryptString(
+          currentUserDoc['encryptPrivateKey'],
+          currentUserDoc['email'],
+          encrypt
+              .IV(Uint8List.fromList(base64Url.decode(currentUserDoc['iv']))));
+      final myPublicKeyPem = currentUserDoc['publicKey'];
+      final contactPublicKeyPem = contactUserDoc['publicKey'];
 
       _myPrivateKey = RSAPrivateKey.fromPEM(privateKeyPem);
-      _contactPublicKey = RSAPublicKey.fromPEM(publicKeyPem);
+      _myPublicKey = RSAPublicKey.fromPEM(myPublicKeyPem);
+      _contactPublicKey = RSAPublicKey.fromPEM(contactPublicKeyPem);
     } else {
       throw Exception("Failed to fetch user keys");
     }
@@ -55,11 +76,11 @@ class ChatProvider with ChangeNotifier {
       _messages = snapshot.docs.map((doc) {
         var data = doc.data();
         if (data['sender'] == user.uid) {
-          // Если отправитель текущий пользователь, показываем оригинальное сообщение
-          data['message'] = data['originalMessage'];
+          // Если отправитель текущий пользователь, расшифровываем его копию
+          data['message'] = _decryptMessage(data['messageForSender']);
         } else {
-          // Если отправитель не текущий пользователь, расшифровываем сообщение
-          data['message'] = _decryptMessage(data['message']);
+          // Если отправитель не текущий пользователь, расшифровываем копию для получателя
+          data['message'] = _decryptMessage(data['messageForRecipient']);
         }
         return data;
       }).toList();
@@ -71,10 +92,11 @@ class ChatProvider with ChangeNotifier {
   Future<void> sendMessage(String message) async {
     if (!_keysInitialized) return;
 
-    final encryptedMessage = _encryptMessage(message);
+    final encryptedMessageForRecipient = _contactPublicKey.encrypt(message);
+    final encryptedMessageForSender = _myPublicKey.encrypt(message);
     final messageData = {
-      'message': encryptedMessage,
-      'originalMessage': message, // Сохраняем оригинальное сообщение
+      'messageForRecipient': encryptedMessageForRecipient,
+      'messageForSender': encryptedMessageForSender,
       'sender': user.uid,
       'recipient': contactId,
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -92,23 +114,12 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  String _encryptMessage(String message) {
-    return _contactPublicKey.encrypt(message);
-  }
-
   String _decryptMessage(String encryptedMessage) {
-    return _myPrivateKey.decrypt(encryptedMessage);
-  }
-
-  Future<void> deleteMessage(String messageId) async {
-    if (!_keysInitialized) return;
-
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(getChatId())
-        .collection('messages')
-        .doc(messageId)
-        .delete();
+    try {
+      return _myPrivateKey.decrypt(encryptedMessage);
+    } catch (e) {
+      return "Unable to decrypt message";
+    }
   }
 
   String getChatId() {

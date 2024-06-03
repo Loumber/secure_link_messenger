@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,7 @@ import 'dart:async';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:crypton/crypton.dart';
+import 'package:encrypt/encrypt.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
@@ -42,9 +44,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late User _currentUser;
   late String _imageURL;
 
-  late RSAPrivateKey _myRsaPrivateKey;
-  late RSAPublicKey _myRsaPublicKey;
-
   @override
   Future<void> signIn(String email, String password) async {
     var logger = Logger(
@@ -54,7 +53,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     logger.d(password);
     await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    await _retrievePrivateKey();
   }
 
   @override
@@ -75,21 +73,31 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       logger.d(myRsaKeypair.privateKey);
       var myRsaPublicKeyString = myRsaKeypair.publicKey.toPEM();
       var myRsaPrivateKeyString = myRsaKeypair.privateKey.toPEM();
-
+      final iv = IV.fromSecureRandom(16);
+      var key = Key.fromUtf8(email.padRight(32, '\0').substring(0, 32));
+      var myEncryptRsaPrivateKeyString =
+          encryptString(myRsaPrivateKeyString, key, iv);
       await _firebaseFirestore.collection('users').doc(_currentUser.uid).set({
         'name': name,
+        'iv': base64UrlEncode(iv.bytes),
         'email': _currentUser.email,
         'status': 'Soon',
         'imageUrl': _imageURL,
         'friends': [],
         'chats': [],
+        'encryptPrivateKey': myEncryptRsaPrivateKeyString,
         'publicKey': myRsaPublicKeyString,
-        'privateKey': myRsaPrivateKeyString,
       });
     } on FirebaseAuthException catch (e) {
       // ignore: avoid_print
       print(e);
     }
+  }
+
+  String encryptString(String message, Key key, IV iv) {
+    final encrypter = Encrypter(AES(key));
+    final encrypted = encrypter.encrypt(message, iv: iv);
+    return encrypted.base64;
   }
 
   void setImage(File avatar) {
@@ -249,17 +257,5 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       throw Exception('User data not found');
     }
     return userData['name'] as String;
-  }
-
-  Future<void> _retrievePrivateKey() async {
-    final currentUser = _firebaseAuth.currentUser;
-    if (currentUser == null) {
-      throw Exception('User is not logged in');
-    }
-    final userDoc =
-        await _firebaseFirestore.collection('users').doc(currentUser.uid).get();
-    _myRsaPublicKey = RSAPublicKey.fromPEM(userDoc['publicKey']);
-    _myRsaPrivateKey = RSAPrivateKey.fromPEM(userDoc['privateKey']);
-    Logger().d('Private Key retrieved successfully');
   }
 }

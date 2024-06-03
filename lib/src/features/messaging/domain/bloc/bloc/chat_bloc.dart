@@ -26,7 +26,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             return ChatError(message: error.toString());
           },
         );
-      } catch (e) {
+      } catch (e, stackTrace) {
+        var logger = Logger(
+          printer: PrettyPrinter(),
+        );
+        logger.d(e);
+        logger.e(stackTrace);
         emit(ChatError(message: e.toString()));
       }
     });

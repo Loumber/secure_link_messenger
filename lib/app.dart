@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/features/account/domain/bloc/settings_bloc.dart';
+import 'package:secure_link_messenger/src/features/contacts/domain/bloc/bloc/friends_bloc.dart';
 import 'package:secure_link_messenger/src/features/contacts/domain/bloc/contacts_bloc.dart';
 import 'package:secure_link_messenger/src/core/navigation/app_routes.dart';
 import 'package:secure_link_messenger/src/features/authentication/domain/bloc/bloc/authentication_bloc.dart';
@@ -17,6 +18,8 @@ import 'package:secure_link_messenger/src/pages/sign_up_page.dart';
 import 'package:secure_link_messenger/src/pages/sing_in_page.dart';
 import 'package:secure_link_messenger/src/pages/verify_email_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'src/features/messaging/domain/bloc/bloc/search_bloc.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -45,6 +48,12 @@ class _MyAppState extends State<MyApp> {
           BlocProvider<ContactsBloc>(
             create: (context) => ContactsBloc(),
           ),
+          BlocProvider<FriendsBloc>(create: (context) => FriendsBloc()),
+          BlocProvider<SearchBloc>(
+              create: (context) => SearchBloc(GetUserChats(ChatRepositoryImpl(
+                    FirebaseAuth.instance,
+                    FirebaseFirestore.instance,
+                  )))),
           BlocProvider(
             create: (context) => ChatBloc(
               GetUserChats(ChatRepositoryImpl(

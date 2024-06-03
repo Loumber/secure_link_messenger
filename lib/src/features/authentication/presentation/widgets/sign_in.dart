@@ -34,7 +34,7 @@ class _SignInState extends State<SignIn> {
             },
             padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
             decoration: BoxDecoration(
-              color: Colors.grey[350],
+              color: Colors.grey[300],
               borderRadius: BorderRadius.circular((10)),
             ),
             placeholder: 'почта',
@@ -59,7 +59,7 @@ class _SignInState extends State<SignIn> {
           CupertinoTextField(
             padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
             decoration: BoxDecoration(
-              color: Colors.grey[350],
+              color: Colors.grey[300],
               borderRadius: BorderRadius.circular((10)),
             ),
             placeholder: 'пароль',
