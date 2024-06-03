@@ -35,14 +35,18 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             case SearchContacts():
               return GestureDetector(
                 child: const Icon(Icons.arrow_back_ios_new_rounded),
-                onTap: () {},
+                onTap: () {
+                  BlocProvider.of<ContactsBloc>(context).add(MyContactsEvent());
+                },
               );
             case AddToMyContacts():
               return SizedBox(width: 25.w);
             case SearchedContacts():
               return GestureDetector(
                 child: const Icon(Icons.arrow_back_ios_new_rounded),
-                onTap: () {},
+                onTap: () {
+                  BlocProvider.of<ContactsBloc>(context).add(MyContactsEvent());
+                },
               );
             case InitialContacts():
               return GestureDetector(

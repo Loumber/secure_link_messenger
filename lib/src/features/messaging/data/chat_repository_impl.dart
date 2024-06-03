@@ -1,7 +1,13 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:secure_link_messenger/src/app/di.dart';
 import 'package:secure_link_messenger/src/features/messaging/domain/entities/chat/chat_entity.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
@@ -15,8 +21,9 @@ abstract class ChatRepository {
 class ChatRepositoryImpl implements ChatRepository {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
+  final Logger logger = Logger(printer: PrettyPrinter());
 
-  late RSAPrivateKey _myPrivateKey;
+  RSAPrivateKey? _myPrivateKey;
   bool _keysInitialized = false;
 
   ChatRepositoryImpl(this._firebaseAuth, this._firebaseFirestore) {
@@ -30,10 +37,30 @@ class ChatRepositoryImpl implements ChatRepository {
     final currentUserDoc =
         await _firebaseFirestore.collection('users').doc(currentUser.uid).get();
     if (currentUserDoc.exists) {
-      final privateKeyPem = currentUserDoc['privateKey'];
+      logger.d(currentUserDoc['encryptPrivateKey']);
+      final ivData = currentUserDoc['iv'];
+      final privateKeyPem = decryptString(
+          currentUserDoc['encryptPrivateKey'],
+          currentUserDoc['email'],
+          IV(Uint8List.fromList(base64Url.decode(ivData))));
       _myPrivateKey = RSAPrivateKey.fromPEM(privateKeyPem);
       _keysInitialized = true;
     }
+  }
+
+  Future<void> ensureKeysInitialized() async {
+    if (!_keysInitialized) {
+      await _initializeKeys();
+    }
+  }
+
+  String decryptString(String encryptedKey, String keyString, IV iv) {
+    final key = Key.fromUtf8(keyString.padRight(32, '\0').substring(0, 32));
+    final encrypter = Encrypter(AES(key));
+    final encrypted = Encrypted.fromBase64(encryptedKey);
+    logger.d(encrypted);
+    final decrypted = encrypter.decrypt(encrypted, iv: iv);
+    return decrypted;
   }
 
   List<ChatEntity> searchMessages(String userName, List<ChatEntity> messages) {
@@ -48,17 +75,20 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<List<ChatEntity>> getUserChats() {
+  Stream<List<ChatEntity>> getUserChats() async* {
+    await ensureKeysInitialized();
+
     final currentUser = _firebaseAuth.currentUser;
 
     if (currentUser == null) {
-      return Stream.value([]);
+      yield [];
+      return;
     }
 
     final userDocStream =
         _firebaseFirestore.collection('users').doc(currentUser.uid).snapshots();
 
-    return userDocStream.asyncMap((userSnapshot) async {
+    yield* userDocStream.asyncMap((userSnapshot) async {
       final userData = userSnapshot.data();
       if (userData == null || !userData.containsKey('chats')) {
         return [];
@@ -150,6 +180,9 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   String _decryptMessage(String encryptedMessage) {
-    return _myPrivateKey.decrypt(encryptedMessage);
+    if (_myPrivateKey == null) {
+      throw StateError("Private key has not been initialized.");
+    }
+    return _myPrivateKey!.decrypt(encryptedMessage);
   }
 }

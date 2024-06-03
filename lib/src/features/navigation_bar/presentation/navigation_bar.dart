@@ -37,7 +37,7 @@ class __MyNavigationBarState extends ConsumerState<MyNavigationBar> {
     return SafeArea(
         child: Container(
       height: 60.h,
-      padding: EdgeInsets.fromLTRB(30.w, 6.h, 30.w, 12),
+      padding: EdgeInsets.fromLTRB(35.w, 6.h, 35.w, 6.h),
       decoration: BoxDecoration(
         color: navigationBarBackgroundColor,
         borderRadius: Platform.isIOS

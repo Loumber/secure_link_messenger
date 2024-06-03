@@ -122,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 10.w, horizontal: 8.h),
                             decoration: BoxDecoration(
-                              color: Colors.grey[350],
+                              color: Colors.grey[300],
                               borderRadius: BorderRadius.circular(10),
                             ),
                             placeholder: 'Сообщение',
@@ -141,7 +141,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         Stack(
                           alignment: Alignment.center,
                           children: [
-                            const CircleAvatar(),
                             CupertinoButton(
                               child: Icon(
                                 Icons.send_rounded,
@@ -175,7 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           padding: EdgeInsets.symmetric(
                               vertical: 10.w, horizontal: 8.h),
                           decoration: BoxDecoration(
-                            color: Colors.grey[350],
+                            color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(10),
                           ),
                           placeholder: 'Сообщение',
@@ -194,7 +193,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       Stack(
                         alignment: Alignment.center,
                         children: [
-                          const CircleAvatar(),
                           CupertinoButton(
                             child: Icon(
                               Icons.send_rounded,

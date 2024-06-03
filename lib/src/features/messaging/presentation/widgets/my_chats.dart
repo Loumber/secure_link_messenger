@@ -29,7 +29,7 @@ class MyChats extends StatelessWidget {
             },
             padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 8.h),
             decoration: BoxDecoration(
-              color: Colors.grey[350],
+              color: Colors.grey[200],
               borderRadius: BorderRadius.circular((10)),
             ),
             placeholder: 'Найти',
@@ -61,7 +61,8 @@ class MyChats extends StatelessWidget {
                 itemCount: myChats.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                       child: ChatCard(
                         uid: myChats[index].uid,
                         name: myChats[index].name,
@@ -85,7 +86,8 @@ class MyChats extends StatelessWidget {
                 itemCount: myChats.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                       child: ChatCard(
                         uid: myChats[index].uid,
                         name: myChats[index].name,

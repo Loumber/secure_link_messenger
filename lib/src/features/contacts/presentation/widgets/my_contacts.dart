@@ -17,7 +17,7 @@ class MyContacts extends StatelessWidget {
     return ListView(
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(15.w, 0, 5.w, 0),
+          padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 0),
           child: CupertinoTextField(
             onChanged: (value) {
               if (value.isNotEmpty) {
@@ -29,7 +29,7 @@ class MyContacts extends StatelessWidget {
             },
             padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 8.h),
             decoration: BoxDecoration(
-              color: Colors.grey[350],
+              color: Colors.grey[200],
               borderRadius: BorderRadius.circular((10)),
             ),
             placeholder: 'Найти',

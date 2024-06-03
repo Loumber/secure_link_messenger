@@ -126,7 +126,7 @@ class _SignUpState extends State<SignUp> {
               },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
-                color: Colors.grey[350],
+                color: Colors.grey[300],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'имя',
@@ -154,7 +154,7 @@ class _SignUpState extends State<SignUp> {
               },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
-                color: Colors.grey[350],
+                color: Colors.grey[300],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'почта',
@@ -182,7 +182,7 @@ class _SignUpState extends State<SignUp> {
               },
               padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.h),
               decoration: BoxDecoration(
-                color: Colors.grey[350],
+                color: Colors.grey[300],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'пароль',
@@ -228,7 +228,7 @@ class _SignUpState extends State<SignUp> {
                 confirmationPassword = value;
               },
               decoration: BoxDecoration(
-                color: Colors.grey[350],
+                color: Colors.grey[300],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'пароль',

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:secure_link_messenger/src/features/account/presentation/user_name.dart';
@@ -85,20 +86,20 @@ class _AvatarState extends State<Avatar> {
       future: _avatarFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SizedBox(
-              height: 420,
-              width: 420,
-              child: Center(child: CupertinoActivityIndicator()));
+          return SizedBox(
+              height: 360.sp,
+              width: 360.sp,
+              child: const Center(child: CupertinoActivityIndicator()));
         } else if (snapshot.hasError) {
           return Text('Ошибка: ${snapshot.error}');
         } else if (snapshot.hasData) {
           return SizedBox(
-            height: 420,
-            width: 420,
+            height: 360.sp,
+            width: 360.sp,
             child: Stack(children: [
               SizedBox(
-                height: 420,
-                width: 420,
+                height: 360.sp,
+                width: 360.sp,
                 child: Image(
                   image: FileImage(snapshot.data!),
                   fit: BoxFit.cover,

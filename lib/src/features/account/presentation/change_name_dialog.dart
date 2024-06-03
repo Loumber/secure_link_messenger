@@ -48,7 +48,7 @@ class _ChangeNameDialogState extends State<ChangeNameDialog> {
             controller: _newNameController,
             placeholder: 'Новое имя',
             placeholderStyle: TextStyle(color: Colors.grey[800]),
-            obscureText: true,
+            obscureText: false,
           ),
         ],
       ),

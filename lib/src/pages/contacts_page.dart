@@ -28,7 +28,7 @@ class ContactsPage extends StatelessWidget {
               onChanged: (value) {},
               padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 8.h),
               decoration: BoxDecoration(
-                color: Colors.grey[350],
+                color: Colors.grey[200],
                 borderRadius: BorderRadius.circular((10)),
               ),
               placeholder: 'Найти',

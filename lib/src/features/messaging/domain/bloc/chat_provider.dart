@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:crypton/crypton.dart';
@@ -19,6 +23,16 @@ class ChatProvider with ChangeNotifier {
     });
   }
 
+  String decryptString(String encryptedKey, String keyString, encrypt.IV iv) {
+    final key =
+        encrypt.Key.fromUtf8(keyString.padRight(32, '\0').substring(0, 32));
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    final encrypted = encrypt.Encrypted.fromBase64(encryptedKey);
+
+    final dencrypted = encrypter.decrypt(encrypted, iv: iv);
+    return dencrypted;
+  }
+
   List<Map<String, dynamic>> get messages => _messages;
   bool get keysInitialized => _keysInitialized;
 
@@ -33,7 +47,11 @@ class ChatProvider with ChangeNotifier {
         .get();
 
     if (currentUserDoc.exists && contactUserDoc.exists) {
-      final privateKeyPem = currentUserDoc['privateKey'];
+      final privateKeyPem = decryptString(
+          currentUserDoc['encryptPrivateKey'],
+          currentUserDoc['email'],
+          encrypt
+              .IV(Uint8List.fromList(base64Url.decode(currentUserDoc['iv']))));
       final myPublicKeyPem = currentUserDoc['publicKey'];
       final contactPublicKeyPem = contactUserDoc['publicKey'];
 
